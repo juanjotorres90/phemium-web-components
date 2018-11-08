@@ -13,7 +13,41 @@ export class MyComponent {
   }
 
   componentWillLoad() {
-    let userToken: string = "b067527c1c42881b2723150001d3cd0eb1108d13";
+    this.loginCustomer();
+  }
+
+  render() {
+    return (
+      <phemium-card phemiumForm={this.form} inputFileHidden={true}>
+        <span slot="file-start">Insertar archivo</span>
+      </ phemium-card>
+    );
+  }
+
+  loginCustomer() {
+    let entity = "login";
+    let formData = new FormData();
+    // formData.append('token', '');
+    formData.append('entity', entity);
+    formData.append('method', 'login_customer');
+    formData.append('arguments', '["cigna","phemium123456"]');
+
+    return fetch("https://api-prerelease.phemium.com/v1/api/",
+      {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .catch(error => console.error('Error:', error))
+      .then(response => {
+        console.log(response);
+
+        this.getPhemiumForm(response)
+      });
+  }
+
+  getPhemiumForm(token) {
+    let userToken: string = token;
     let entity = "cards";
     let formData = new FormData();
     formData.append('token', userToken);
@@ -31,13 +65,5 @@ export class MyComponent {
       .then(response => {
         this.form = response;
       });
-  }
-
-  render() {
-    return (
-      <phemium-card phemiumForm={this.form} inputFileHidden={true}>
-        <span slot="file-start">Insertar archivo</span>
-      </ phemium-card>
-    );
   }
 }
