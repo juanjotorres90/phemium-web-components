@@ -1,3 +1,56 @@
-phemium-card {
-    /* Component styles go here */
+:host {
+  text-align: center;
+  font-size: 1em;
+  --form-line-height: 50px;
+  --field-width: 80%;
+  --field-height: 20px;
+  --field-border-width: 1px 1px 1px 1px;
+  --field-border-color: black;
+  --field-border-style: solid;
+  --submit-button-width: 80%;
+  --input-file-opacity: 0;
+  --input-file-span-left: 0;
 }
+
+phemium-card .main-form {
+  line-height: var(--form-line-height);
+}
+
+phemium-card .form-field {
+  width: var(--field-width);
+  height: var(--field-height);
+  border-width: var(--field-border-width);
+  border-color: var(--field-border-color);
+  border-style: var(--field-border-style);
+}
+
+phemium-card .file-field {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+}
+
+phemium-card .input-hidden {
+  opacity: var(--input-file-opacity);
+  width: 100%;
+  position: absolute;
+  left: var(--input-file-span-left);
+}
+
+phemium-card .form-submit {
+  width: var(--submit-button-width);
+}
+
+phemium-card span {
+  position: absolute;
+  left: 0;
+}
+
+/* phemium-card ::slotted([slot="file-end"]) {
+  float: right;
+}
+
+phemium-card ::slotted([slot="file-start"]) {
+  position: absolute;
+  left: 0;
+} */

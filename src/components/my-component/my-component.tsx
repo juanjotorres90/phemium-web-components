@@ -1,4 +1,4 @@
-import { Component, State } from '@stencil/core';
+import { Component, State, Listen } from '@stencil/core';
 
 @Component({
   tag: 'my-component',
@@ -7,9 +7,13 @@ import { Component, State } from '@stencil/core';
 })
 export class MyComponent {
   @State() form: any;
+  @Listen('formCompleted')
+  formCompletedHandler(event: CustomEvent) {
+    console.log('Received the custom todoCompleted event: ', event.detail);
+  }
 
   componentWillLoad() {
-    let userToken: string = "e6eabc1a6036ebf954f679b658635f1e5fddda60";
+    let userToken: string = "b067527c1c42881b2723150001d3cd0eb1108d13";
     let entity = "cards";
     let formData = new FormData();
     formData.append('token', userToken);
@@ -29,9 +33,15 @@ export class MyComponent {
       });
   }
 
+  componentDidLoad() {
+    // console.log('forms:: ', document.forms);
+  }
+
   render() {
     return (
-      <phemium-card phemiumForm={this.form}></ phemium-card>
+      <phemium-card phemiumForm={this.form} inputFileHidden={true}>
+        <span slot="file-start">Insertar archivo</span>
+      </ phemium-card>
     );
   }
 }

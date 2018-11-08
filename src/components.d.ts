@@ -16,9 +16,16 @@ export namespace Components {
   interface MyComponentAttributes extends StencilHTMLAttributes {}
 
   interface PhemiumCard {
+    'formElement': any;
+    'inputFileClass': string;
+    'inputFileHidden': boolean;
     'phemiumForm': any;
   }
   interface PhemiumCardAttributes extends StencilHTMLAttributes {
+    'formElement'?: any;
+    'inputFileClass'?: string;
+    'inputFileHidden'?: boolean;
+    'onFormCompleted'?: (event: CustomEvent) => void;
     'phemiumForm'?: any;
   }
 }
