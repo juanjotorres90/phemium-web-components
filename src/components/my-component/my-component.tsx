@@ -9,7 +9,7 @@ export class MyComponent {
   @State() form: any;
   @Listen('formCompleted')
   formCompletedHandler(event: CustomEvent) {
-    console.log('Received the custom todoCompleted event: ', event.detail);
+    console.log(event.detail);
   }
 
   componentWillLoad() {
@@ -31,10 +31,6 @@ export class MyComponent {
       .then(response => {
         this.form = response;
       });
-  }
-
-  componentDidLoad() {
-    // console.log('forms:: ', document.forms);
   }
 
   render() {

@@ -41,10 +41,10 @@ phemium-card .form-submit {
   width: var(--submit-button-width);
 }
 
-phemium-card span {
+/* phemium-card span {
   position: absolute;
   left: 0;
-}
+} */
 
 /* phemium-card ::slotted([slot="file-end"]) {
   float: right;
