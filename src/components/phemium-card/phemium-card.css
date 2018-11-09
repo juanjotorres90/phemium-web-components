@@ -13,13 +13,13 @@
 } */
 
 phemium-card .main-form {
-  line-height: 50px;
+  /* line-height: 50px; */
 }
 
 phemium-card .form-field {
   width: 80%;
   height: 20px;
-  border-width: 80%;
+  border-width: 1px;
   border-color: black;
   border-style: solid;
 }

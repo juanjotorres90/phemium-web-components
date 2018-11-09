@@ -13,12 +13,14 @@ import '@stencil/core';
 export namespace Components {
 
   interface PhemiumCard {
+    'buttonText': string;
     'formElement': any;
     'inputFileClass': string;
     'inputFileHidden': boolean;
     'phemiumForm': any;
   }
   interface PhemiumCardAttributes extends StencilHTMLAttributes {
+    'buttonText'?: string;
     'formElement'?: any;
     'inputFileClass'?: string;
     'inputFileHidden'?: boolean;

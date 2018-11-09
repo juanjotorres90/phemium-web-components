@@ -9,6 +9,7 @@ export class PhemiumCard {
     @Prop() phemiumForm: any;
     @State() formValues: any[] = [];
     @Prop() inputFileHidden: boolean = false;
+    @Prop() buttonText: string;
     @Prop({ mutable: true }) inputFileClass: string;
     @Prop({ mutable: true }) formElement: any;
 
@@ -43,9 +44,13 @@ export class PhemiumCard {
                 <form id="phemiumForm" class="main-form" onSubmit={(event) => this.handleSubmit(event)}>
                     {this.phemiumForm.fields.map((field, index) => {
                         if (field.library_field.type == 1) {
-                            return <input class="form-field" type="text" onInput={(event) => this.handleChange(event, index)} />;
+                            return <input class="form-field" type="text"
+                                placeholder={field.library_field.labels.filter((language) => {
+                                    return language.id = "es";
+                                })[0].value}
+                                onInput={(event) => this.handleChange(event, index)} />;
                         } else if (field.library_field.type == 3 || field.library_field.type == 4) {
-                            return (
+                            return [
                                 <select class="form-field" onInput={(event) => this.handleSelect(event, index)}>
                                     {field.library_field.options.map((option) => {
                                         return <option value={option.value}>{option.labels.map((label) => {
@@ -55,7 +60,7 @@ export class PhemiumCard {
                                         })}</option>
                                     })}
                                 </select>
-                            )
+                            ]
                         } else if (field.library_field.type == 17) {
                             return [
                                 <div class="form-field file-field">
@@ -66,9 +71,11 @@ export class PhemiumCard {
                             ]
                         }
                     })}
-                    <input class="form-submit" type="submit" />
+                    <input class="form-submit" type="submit" value={this.buttonText} />
                 </form>
             ]
+        } else {
+            return null;
         }
     }
 }
