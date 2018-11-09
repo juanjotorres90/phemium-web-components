@@ -1,4 +1,4 @@
-:host {
+/* :host {
   text-align: center;
   font-size: 1em;
   --form-line-height: 50px;
@@ -10,18 +10,18 @@
   --submit-button-width: 80%;
   --input-file-opacity: 0;
   --input-file-span-left: 0;
-}
+} */
 
 phemium-card .main-form {
-  line-height: var(--form-line-height);
+  line-height: 50px;
 }
 
 phemium-card .form-field {
-  width: var(--field-width);
-  height: var(--field-height);
-  border-width: var(--field-border-width);
-  border-color: var(--field-border-color);
-  border-style: var(--field-border-style);
+  width: 80%;
+  height: 20px;
+  border-width: 80%;
+  border-color: black;
+  border-style: solid;
 }
 
 phemium-card .file-field {
@@ -31,14 +31,14 @@ phemium-card .file-field {
 }
 
 phemium-card .input-hidden {
-  opacity: var(--input-file-opacity);
+  opacity: 0;
   width: 100%;
   position: absolute;
-  left: var(--input-file-span-left);
+  left: 0;
 }
 
 phemium-card .form-submit {
-  width: var(--submit-button-width);
+  width: 80%;
 }
 
 /* phemium-card span {

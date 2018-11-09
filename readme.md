@@ -44,8 +44,6 @@ https://stenciljs.com/docs/overview
 
 ## Phemium-card Usage
 
-The component itsef is inside components/phemium-card. my-component it's just a main component to test phemium-card.
-
 Component properties:
 
     - phemiumForm: Form from the call to Phemium API.

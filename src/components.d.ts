@@ -12,9 +12,6 @@ import '@stencil/core';
 
 export namespace Components {
 
-  interface MyComponent {}
-  interface MyComponentAttributes extends StencilHTMLAttributes {}
-
   interface PhemiumCard {
     'formElement': any;
     'inputFileClass': string;
@@ -32,21 +29,13 @@ export namespace Components {
 
 declare global {
   interface StencilElementInterfaces {
-    'MyComponent': Components.MyComponent;
     'PhemiumCard': Components.PhemiumCard;
   }
 
   interface StencilIntrinsicElements {
-    'my-component': Components.MyComponentAttributes;
     'phemium-card': Components.PhemiumCardAttributes;
   }
 
-
-  interface HTMLMyComponentElement extends Components.MyComponent, HTMLStencilElement {}
-  var HTMLMyComponentElement: {
-    prototype: HTMLMyComponentElement;
-    new (): HTMLMyComponentElement;
-  };
 
   interface HTMLPhemiumCardElement extends Components.PhemiumCard, HTMLStencilElement {}
   var HTMLPhemiumCardElement: {
@@ -55,12 +44,10 @@ declare global {
   };
 
   interface HTMLElementTagNameMap {
-    'my-component': HTMLMyComponentElement
     'phemium-card': HTMLPhemiumCardElement
   }
 
   interface ElementTagNameMap {
-    'my-component': HTMLMyComponentElement;
     'phemium-card': HTMLPhemiumCardElement;
   }
 
