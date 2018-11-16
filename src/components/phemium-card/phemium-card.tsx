@@ -53,11 +53,14 @@ export class PhemiumCard {
                             return [
                                 <select class="form-field" onInput={(event) => this.handleSelect(event, index)}>
                                     {field.library_field.options.map((option) => {
-                                        return <option value={option.value}>{option.labels.map((label) => {
-                                            if (label.id == "es") {
-                                                return label.value;
-                                            }
-                                        })}</option>
+                                        return [
+                                            <option value="" disabled selected hidden>Motivo</option>,
+                                            <option value={option.value}>{option.labels.map((label) => {
+                                                if (label.id == "es") {
+                                                    return label.value;
+                                                }
+                                            })}</option>
+                                        ]
                                     })}
                                 </select>
                             ]
