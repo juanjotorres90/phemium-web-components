@@ -32,7 +32,7 @@ phemium-card .file-field {
 
 phemium-card .input-hidden {
   opacity: 0;
-  width: 100%;
+  width: 100% !important;
   position: absolute;
   left: 0;
 }
@@ -41,6 +41,9 @@ phemium-card .form-submit {
   width: 80%;
 }
 
+phemium-card .fake-inut-file-container {
+  position: relative;
+}
 /* phemium-card span {
   position: absolute;
   left: 0;

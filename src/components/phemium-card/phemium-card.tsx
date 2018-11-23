@@ -15,8 +15,16 @@ export class PhemiumCard {
   @Event() formCompleted: EventEmitter;
 
   componentWillLoad() {
-    // console.log(this.phemiumForm);
+    console.log(this.phemiumForm);
     this.inputFileHidden ? (this.inputFileClass = "input-hidden") : "input-visible";
+  }
+  componentWillUpdate() {
+    const formElements = Array.from((document.getElementById("phemiumForm") as HTMLFormElement).elements);
+    formElements.filter((element: any) => {
+      return element.type != 'submit';
+    }).map((input: any) => {
+      input.value = input.type == "select-one" ? "" : null;
+    })
   }
 
   handleSubmit(event) {
@@ -30,6 +38,8 @@ export class PhemiumCard {
       .map((input: any) => {
         return input.value;
       });
+    console.log("values: ", values);
+
     this.formCompleted.emit(values);
   }
 
@@ -39,6 +49,12 @@ export class PhemiumCard {
 
   handleSelect(event, fieldId) {
     this.formValues[fieldId] = event.target.value;
+  }
+
+  handleInputFile(event, fieldId) {
+    this.formValues[fieldId] = event.target.value;
+    console.log(event);
+    (document.getElementById('fakeInputFile') as HTMLInputElement).value = event.target.value;
   }
 
   render() {
@@ -80,9 +96,9 @@ export class PhemiumCard {
               ];
             } else if (field.library_field.type == 17) {
               return [
-                <div class="form-field file-field">
-                  <slot name="file-start" />
-                  <input class={this.inputFileClass} type="file" />
+                <div class="fake-inut-file-container">
+                  <input id="fakeInputFile" class="form-field file-field" value="Insertar archivo" />
+                  <input class={`${this.inputFileClass} form-field`} type="file" onInput={event => this.handleInputFile(event, index)} />
                   <slot name="file-end" />
                 </div>
               ];
