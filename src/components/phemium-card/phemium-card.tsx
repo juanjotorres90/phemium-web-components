@@ -49,6 +49,7 @@ export class PhemiumCard {
       this.handleInputChange(resource.resource_url, this.file.fieldId);
     }
     this.formCompleted.emit(this.formValues);
+    this.hasFiles = false;
   }
 
   handleInputChange(event, libraryFieldId) {
