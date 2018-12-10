@@ -13,19 +13,25 @@ import '@stencil/core';
 export namespace Components {
 
   interface PhemiumCard {
+    'API_ENDPOINT': string;
+    'FIRST_FILE': number;
     'buttonText': string;
     'formElement': any;
     'inputFileClass': string;
     'inputFileHidden': boolean;
     'phemiumForm': any;
+    'userToken': string;
   }
   interface PhemiumCardAttributes extends StencilHTMLAttributes {
+    'API_ENDPOINT'?: string;
+    'FIRST_FILE'?: number;
     'buttonText'?: string;
     'formElement'?: any;
     'inputFileClass'?: string;
     'inputFileHidden'?: boolean;
     'onFormCompleted'?: (event: CustomEvent) => void;
     'phemiumForm'?: any;
+    'userToken'?: string;
   }
 }
 

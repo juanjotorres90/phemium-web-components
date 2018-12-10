@@ -5,12 +5,21 @@ import { Component, Prop, State, Event, EventEmitter } from "@stencil/core";
   styleUrl: "phemium-card.css"
 })
 export class PhemiumCard {
+
+  @Prop() API_ENDPOINT: string;
+  @Prop() FIRST_FILE: number = 0;
   @Prop() phemiumForm: any;
+  @Prop() userToken: string;
   @Prop() inputFileHidden: boolean = false;
   @Prop() buttonText: string;
   @Prop({ mutable: true }) inputFileClass: string;
   @Prop({ mutable: true }) formElement: any;
   @State() formValues: any[] = [];
+  @State() hasFiles: boolean = false;
+  @State() file: any = {
+    item: "",
+    fieldId: 0
+  };
 
   @Event() formCompleted: EventEmitter;
 
@@ -19,6 +28,12 @@ export class PhemiumCard {
   }
   componentWillUpdate() {
     // console.log(this.phemiumForm);
+    this.phemiumForm && this.formValues.length == 0 ? this.formValues = this.phemiumForm.fields.map((field) => {
+      return {
+        library_field_id: field.library_field_id,
+        text: ""
+      }
+    }) : null;
     const formElements = Array.from((document.getElementById("phemiumForm") as HTMLFormElement).elements);
     formElements.filter((element: any) => {
       return element.type != 'submit';
@@ -27,29 +42,53 @@ export class PhemiumCard {
     })
   }
 
-  componentDidUpdate() {
-    this.phemiumForm && this.formValues.length == 0 ? this.formValues = this.phemiumForm.fields.map((field) => {
-      return {
-        library_field_id: field.library_field_id,
-        text: ""
-      }
-    }) : null;
-  }
-
-  handleSubmit(event) {
+  async handleSubmit(event) {
     event.preventDefault();
+    if (this.hasFiles == true) {
+      const resource = await this.uploadResource(this.file.item);
+      this.handleInputChange(resource.resource_url, this.file.fieldId);
+    }
     this.formCompleted.emit(this.formValues);
   }
 
   handleInputChange(event, libraryFieldId) {
+    const inputValue = event.target && event.target.type != "file" ? event.target.value : event;
     this.formValues.filter((field) => {
       return field.library_field_id == libraryFieldId;
     }).map((fieldValue) => {
-      console.log(fieldValue);
-
-      fieldValue.text = event.target.value;
+      fieldValue.text = inputValue;
     })
-    event.target.type == "file" ? (document.getElementById('fakeInputFile') as HTMLInputElement).value = event.target.value : null;
+  }
+
+  handleFileChange(event, libraryFieldId) {
+    (document.getElementById('fakeInputFile') as HTMLInputElement).value = event.target.value;
+    this.file.item = event.target.files[this.FIRST_FILE];
+    this.file.fieldId = libraryFieldId;
+    this.hasFiles = true;
+  }
+
+  async uploadResource(file: any) {
+    const entity = "resources";
+    const method = "upload_resource";
+    let formData = new FormData();
+    formData.append('token', this.userToken);
+    formData.append('entity', entity);
+    formData.append('method', method);
+    formData.append('arguments', `["${file.name}"]`);
+    formData.append('file', file);
+
+    let response: void | Promise<any>;
+    try {
+      const res = await fetch(this.API_ENDPOINT, {
+        method: 'POST',
+        body: formData
+      });
+      response = await res.json();
+    }
+    catch (error) {
+      response = console.error('Error:', error);
+    }
+    return response;
   }
 
   render() {
@@ -95,7 +134,7 @@ export class PhemiumCard {
               return [
                 <div class="fake-inut-file-container">
                   <input id="fakeInputFile" class="form-field file-field" value="Insertar archivo" />
-                  <input class={`${this.inputFileClass} form-field`} type="file" onInput={event => this.handleInputChange(event, field.library_field_id)} />
+                  <input class={`${this.inputFileClass} form-field`} type="file" onInput={event => this.handleFileChange(event, field.library_field_id)} />
                   <slot name="file-end" />
                 </div>
               ];
