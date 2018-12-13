@@ -31,6 +31,7 @@ phemium-card .file-field {
 }
 
 phemium-card .input-hidden {
+  z-index: 99999;
   opacity: 0;
   width: 100% !important;
   position: absolute;
