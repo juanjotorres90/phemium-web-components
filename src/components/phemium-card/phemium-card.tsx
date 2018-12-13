@@ -28,8 +28,6 @@ export class PhemiumCard {
 
   }
   componentWillUpdate() {
-    console.log("update");
-
     // console.log(this.phemiumForm);
     this.inputFileClass = this.inputFileHidden ? "input-hidden" : "input-visible";
     this.phemiumForm && this.formValues.length == 0 ? this.formValues = this.phemiumForm.fields.map((field) => {
