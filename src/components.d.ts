@@ -16,6 +16,7 @@ export namespace Components {
     'API_ENDPOINT': string;
     'FIRST_FILE': number;
     'buttonText': string;
+    'fakeInputValue': string;
     'formElement': any;
     'inputFileClass': string;
     'inputFileHidden': boolean;
@@ -26,6 +27,7 @@ export namespace Components {
     'API_ENDPOINT'?: string;
     'FIRST_FILE'?: number;
     'buttonText'?: string;
+    'fakeInputValue'?: string;
     'formElement'?: any;
     'inputFileClass'?: string;
     'inputFileHidden'?: boolean;

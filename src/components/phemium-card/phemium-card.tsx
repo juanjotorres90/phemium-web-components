@@ -14,6 +14,7 @@ export class PhemiumCard {
   @Prop() buttonText: string;
   @Prop({ mutable: true }) inputFileClass: string;
   @Prop({ mutable: true }) formElement: any;
+  @Prop({ mutable: true }) fakeInputValue: string = "Insertar archivo";
   @State() formValues: any[] = [];
   @State() hasFiles: boolean = false;
   @State() file: any = {
@@ -24,10 +25,13 @@ export class PhemiumCard {
   @Event() formCompleted: EventEmitter;
 
   componentWillLoad() {
-    this.inputFileHidden ? (this.inputFileClass = "input-hidden") : "input-visible";
+
   }
   componentWillUpdate() {
+    console.log("update");
+
     // console.log(this.phemiumForm);
+    this.inputFileClass = this.inputFileHidden ? "input-hidden" : "input-visible";
     this.phemiumForm && this.formValues.length == 0 ? this.formValues = this.phemiumForm.fields.map((field) => {
       return {
         library_field_id: field.library_field_id,
@@ -53,6 +57,8 @@ export class PhemiumCard {
   }
 
   handleInputChange(event, libraryFieldId) {
+    console.log(event);
+
     const inputValue = event.target && event.target.type != "file" ? event.target.value : event;
     this.formValues.filter((field) => {
       return field.library_field_id == libraryFieldId;
@@ -62,10 +68,15 @@ export class PhemiumCard {
   }
 
   handleFileChange(event, libraryFieldId) {
-    (document.getElementById('fakeInputFile') as HTMLInputElement).value = event.target.value;
+    console.log("event a handle", event);
+    const currentValue = event.target.value;
+    this.fakeInputValue = currentValue;
     this.file.item = event.target.files[this.FIRST_FILE];
     this.file.fieldId = libraryFieldId;
     this.hasFiles = true;
+
+    // (document.getElementById('fakeInputFile') as HTMLInputElement).value = currentValue;
+
   }
 
   async uploadResource(file: any) {
@@ -95,7 +106,7 @@ export class PhemiumCard {
   render() {
     if (this.phemiumForm) {
       return [
-        <form id="phemiumForm" class="main-form" onSubmit={event => this.handleSubmit(event)}>
+        <form id="phemiumForm" class="main-form" onSubmit={(event) => this.handleSubmit(event)}>
           {this.phemiumForm.fields.map((field) => {
             if (field.library_field.type == 1) {
               return (
@@ -107,12 +118,12 @@ export class PhemiumCard {
                       return (language.id = "es");
                     })[0].value
                   }
-                  onInput={event => this.handleInputChange(event, field.library_field_id)}
+                  onInput={(event) => this.handleInputChange(event, field.library_field_id)}
                 />
               );
             } else if (field.library_field.type == 3 || field.library_field.type == 4) {
               return [
-                <select class="form-field" onInput={event => this.handleInputChange(event, field.library_field_id)}>
+                <select class="form-field" onInput={(event) => this.handleInputChange(event, field.library_field_id)}>
                   <option value="" disabled selected hidden>
                     {field.library_field.labels.filter(language => {
                       return (language.id = "es");
@@ -134,8 +145,9 @@ export class PhemiumCard {
             } else if (field.library_field.type == 17) {
               return [
                 <div class="fake-inut-file-container">
-                  <input id="fakeInputFile" class="form-field file-field" value="Insertar archivo" />
-                  <input class={`${this.inputFileClass} form-field`} type="file" onInput={event => this.handleFileChange(event, field.library_field_id)} />
+                  <input id="fakeInputFile" class="form-field file-field" value={this.fakeInputValue} />
+                  <input type="file" class={`${this.inputFileClass} form-field`}
+                    onChange={(event) => this.handleFileChange(event, field.library_field_id)} />
                   <slot name="file-end" />
                 </div>
               ];
