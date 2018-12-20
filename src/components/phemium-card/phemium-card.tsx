@@ -9,6 +9,8 @@ export class PhemiumCard {
   @Prop() API_ENDPOINT: string;
   @Prop() FIRST_FILE: number = 0;
   @Prop() phemiumForm: any;
+  @Prop() showSubmitButton: boolean = true;
+  @Prop() userId: number;
   @Prop() userToken: string;
   @Prop() inputFileHidden: boolean = false;
   @Prop() buttonText: string;
@@ -36,12 +38,15 @@ export class PhemiumCard {
         text: ""
       }
     }) : null;
-    const formElements = Array.from((document.getElementById("phemiumForm") as HTMLFormElement).elements);
-    formElements.filter((element: any) => {
-      return element.type != 'submit';
-    }).map((input: any) => {
-      input.value = input.type == "select-one" ? "" : null;
-    })
+    const phemiumFormElement = (document.getElementById("phemiumForm") as HTMLFormElement);
+    const formElements = phemiumFormElement ? Array.from(phemiumFormElement.elements) : null;
+    if (formElements) {
+      formElements.filter((element: any) => {
+        return element.type != 'submit';
+      }).map((input: any) => {
+        input.value = input.type == "select-one" ? "" : null;
+      })
+    }
   }
 
   async handleSubmit(event) {
@@ -55,8 +60,6 @@ export class PhemiumCard {
   }
 
   handleInputChange(event, libraryFieldId) {
-    console.log(event);
-
     const inputValue = event.target && event.target.type != "file" ? event.target.value : event;
     this.formValues.filter((field) => {
       return field.library_field_id == libraryFieldId;
@@ -66,15 +69,34 @@ export class PhemiumCard {
   }
 
   handleFileChange(event, libraryFieldId) {
-    console.log("event a handle", event);
     const currentValue = event.target.value;
     this.fakeInputValue = currentValue;
     this.file.item = event.target.files[this.FIRST_FILE];
     this.file.fieldId = libraryFieldId;
     this.hasFiles = true;
+  }
 
-    // (document.getElementById('fakeInputFile') as HTMLInputElement).value = currentValue;
+  async handleCheckboxChange(event, libraryFieldId) {
+    const entity = "cards";
+    const method = "update_field_values";
+    let formData = new FormData();
+    formData.append('token', this.userToken);
+    formData.append('entity', entity);
+    formData.append('method', method);
+    formData.append('arguments', `[{"enduser_id":${this.userId}},[{"library_field_id":${libraryFieldId},"text":"${event.target.checked}"}],"es",${this.phemiumForm.id},false]`);
 
+    let response: void | Promise<any>;
+    try {
+      const res = await fetch(this.API_ENDPOINT, {
+        method: 'POST',
+        body: formData
+      });
+      response = await res.json();
+    }
+    catch (error) {
+      response = console.error('Error:', error);
+    }
+    return response;
   }
 
   async uploadResource(file: any) {
@@ -99,6 +121,12 @@ export class PhemiumCard {
       response = console.error('Error:', error);
     }
     return response;
+  }
+
+  getFieldName(field: any, language: string) {
+    return field.library_field.labels.filter(lang => {
+      return (lang.id = language);
+    })[0].value;
   }
 
   render() {
@@ -149,9 +177,22 @@ export class PhemiumCard {
                   <slot name="file-end" />
                 </div>
               ];
+            } else if (field.library_field.type == 13) {
+              const fieldName = this.getFieldName(field, "es");
+              return [
+                <div class="input-checkbox-container">
+                  <span class="notifications-text">
+                    {fieldName}
+                  </span>
+                  <label class="switch notifications-toggle">
+                    <input id={field.library_field.identification} type="checkbox" onChange={(event) => this.handleCheckboxChange(event, field.library_field_id)} />
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+              ];
             }
           })}
-          <input class="form-submit" type="submit" value={this.buttonText} />
+          {this.showSubmitButton ? <input class="form-submit" type="submit" value={this.buttonText} /> : null}
         </form>
       ];
     } else {
