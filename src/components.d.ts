@@ -21,6 +21,8 @@ export namespace Components {
     'inputFileClass': string;
     'inputFileHidden': boolean;
     'phemiumForm': any;
+    'showSubmitButton': boolean;
+    'userId': number;
     'userToken': string;
   }
   interface PhemiumCardAttributes extends StencilHTMLAttributes {
@@ -33,6 +35,8 @@ export namespace Components {
     'inputFileHidden'?: boolean;
     'onFormCompleted'?: (event: CustomEvent) => void;
     'phemiumForm'?: any;
+    'showSubmitButton'?: boolean;
+    'userId'?: number;
     'userToken'?: string;
   }
 }
