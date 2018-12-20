@@ -16,8 +16,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 - Changed z-index for input type file to fix future style problems.
 
-### Security
-
 ## [1.0.0] - 2018-12-13
 
 ### Added
@@ -25,13 +23,3 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Phemium-card component displaying inputs of type text, file and select.
 - Uploading resources in case user selects a file.
 - Returning array prepared to send to phemium.
-
-### Changed
-
-### Deprecated
-
-### Removed
-
-### Fixed
-
-### Security
