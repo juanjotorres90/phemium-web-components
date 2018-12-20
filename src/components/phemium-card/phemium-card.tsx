@@ -29,6 +29,8 @@ export class PhemiumCard {
   componentWillLoad() {
 
   }
+
+  // Resets inputs of type select and initialize array to return with phemium form values
   componentWillUpdate() {
     // console.log(this.phemiumForm);
     this.inputFileClass = this.inputFileHidden ? "input-hidden" : "input-visible";
@@ -49,6 +51,8 @@ export class PhemiumCard {
     }
   }
 
+  // Function to handle submit event when user finishes inserting values. It uploads resources if needed and emits an event with 
+  // an array containing all form values on it, prepared to send to phemium.
   async handleSubmit(event) {
     event.preventDefault();
     if (this.hasFiles == true) {
@@ -59,6 +63,7 @@ export class PhemiumCard {
     this.hasFiles = false;
   }
 
+  // Function to handle input values and update the array with them
   handleInputChange(event, libraryFieldId) {
     const inputValue = event.target && event.target.type != "file" ? event.target.value : event;
     this.formValues.filter((field) => {
@@ -68,6 +73,8 @@ export class PhemiumCard {
     })
   }
 
+  // Function to handle file input. It takes the file item url and the field id and creates an object with them.
+  // It also sets a boolean to true. This boolean is needed to tell handleSubmit() if user has selected a file and proceed with the upload.
   handleFileChange(event, libraryFieldId) {
     const currentValue = event.target.value;
     this.fakeInputValue = currentValue;
@@ -76,6 +83,7 @@ export class PhemiumCard {
     this.hasFiles = true;
   }
 
+  //Function to handle checkbox input changes and update phemium form with the values automatically on every change.
   async handleCheckboxChange(event, libraryFieldId) {
     const entity = "cards";
     const method = "update_field_values";
@@ -99,6 +107,7 @@ export class PhemiumCard {
     return response;
   }
 
+  // Function designed to handle the upload of a resource to Phemium. It return a resource_url if phemium managed to save the file.
   async uploadResource(file: any) {
     const entity = "resources";
     const method = "upload_resource";
@@ -123,6 +132,7 @@ export class PhemiumCard {
     return response;
   }
 
+  //Function to get the field name to set labels and placeholders
   getFieldName(field: any, language: string) {
     return field.library_field.labels.filter(lang => {
       return (lang.id = language);
@@ -134,26 +144,20 @@ export class PhemiumCard {
       return [
         <form id="phemiumForm" class="main-form" onSubmit={(event) => this.handleSubmit(event)}>
           {this.phemiumForm.fields.map((field) => {
+            const fieldName = this.getFieldName(field, "es");
             if (field.library_field.type == 1) {
               return (
                 <input
                   class="form-field"
                   type="text"
-                  placeholder={
-                    field.library_field.labels.filter(language => {
-                      return (language.id = "es");
-                    })[0].value
-                  }
-                  onInput={(event) => this.handleInputChange(event, field.library_field_id)}
-                />
+                  placeholder={fieldName}
+                  onInput={(event) => this.handleInputChange(event, field.library_field_id)} />
               );
             } else if (field.library_field.type == 3 || field.library_field.type == 4) {
               return [
                 <select class="form-field" onInput={(event) => this.handleInputChange(event, field.library_field_id)}>
                   <option value="" disabled selected hidden>
-                    {field.library_field.labels.filter(language => {
-                      return (language.id = "es");
-                    })[0].value}
+                    {fieldName}
                   </option>
                   {field.library_field.options.map(option => {
                     return (
@@ -178,7 +182,6 @@ export class PhemiumCard {
                 </div>
               ];
             } else if (field.library_field.type == 13) {
-              const fieldName = this.getFieldName(field, "es");
               return [
                 <div class="input-checkbox-container">
                   <span class="notifications-text">

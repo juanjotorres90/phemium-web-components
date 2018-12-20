@@ -10,14 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Phemium-card component displaying inputs of type checkbox with toggle slide style.
-
 - Updating in phemium results of checkbox input automatically when users checks it.
-
-### Changed
-
-### Deprecated
-
-### Removed
 
 ### Fixed
 
@@ -30,9 +23,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 ### Added
 
 - Phemium-card component displaying inputs of type text, file and select.
-
 - Uploading resources in case user selects a file.
-
 - Returning array prepared to send to phemium.
 
 ### Changed
