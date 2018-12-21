@@ -128,7 +128,7 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.input-checkbox-container {
+.notifications-checkbox-container {
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -145,4 +145,17 @@ input:checked + .slider:before {
 .notifications-toggle {
   position: absolute;
   right: 10%;
+}
+
+.terms-checkbox-container {
+}
+
+.terms-text {
+}
+
+.accept-buttons-container {
+}
+.refuse-button {
+}
+.accept-button {
 }

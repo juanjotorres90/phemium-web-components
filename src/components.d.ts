@@ -16,12 +16,14 @@ export namespace Components {
     'API_ENDPOINT': string;
     'FIRST_FILE': number;
     'buttonText': string;
+    'checkboxStyle': boolean;
     'fakeInputValue': string;
     'formElement': any;
     'inputFileClass': string;
     'inputFileHidden': boolean;
     'phemiumForm': any;
     'showSubmitButton': boolean;
+    'toggleStyle': boolean;
     'userId': number;
     'userToken': string;
   }
@@ -29,6 +31,7 @@ export namespace Components {
     'API_ENDPOINT'?: string;
     'FIRST_FILE'?: number;
     'buttonText'?: string;
+    'checkboxStyle'?: boolean;
     'fakeInputValue'?: string;
     'formElement'?: any;
     'inputFileClass'?: string;
@@ -36,6 +39,7 @@ export namespace Components {
     'onFormCompleted'?: (event: CustomEvent) => void;
     'phemiumForm'?: any;
     'showSubmitButton'?: boolean;
+    'toggleStyle'?: boolean;
     'userId'?: number;
     'userToken'?: string;
   }

@@ -13,6 +13,8 @@ export class PhemiumCard {
   @Prop() userId: number;
   @Prop() userToken: string;
   @Prop() inputFileHidden: boolean = false;
+  @Prop() checkboxStyle: boolean = false;
+  @Prop() toggleStyle: boolean = false;
   @Prop() buttonText: string;
   @Prop({ mutable: true }) inputFileClass: string;
   @Prop({ mutable: true }) formElement: any;
@@ -34,7 +36,7 @@ export class PhemiumCard {
    *  Resets inputs of type select and initialize array to return with phemium form values
    */
   componentWillUpdate() {
-    // console.log(this.phemiumForm);
+    console.log(this.phemiumForm);
     this.inputFileClass = this.inputFileHidden ? "input-hidden" : "input-visible";
     this.phemiumForm && this.formValues.length == 0 ? this.formValues = this.phemiumForm.fields.map((field) => {
       return {
@@ -207,17 +209,36 @@ export class PhemiumCard {
                 </div>
               ];
             } else if (field.library_field.type == 13) {
-              return [
-                <div class="input-checkbox-container">
-                  <span class="notifications-text">
-                    {fieldName}
-                  </span>
-                  <label class="switch notifications-toggle">
-                    <input id={field.library_field.identification} type="checkbox" onChange={(event) => this.handleCheckboxChange(event, field.library_field_id)} />
-                    <span class="slider round"></span>
-                  </label>
-                </div>
-              ];
+              if (this.toggleStyle) {
+                return (
+                  <div class="notifications-checkbox-container">
+                    <span class="notifications-text">
+                      {fieldName}
+                    </span>
+                    <label class="switch notifications-toggle">
+                      <input id={field.library_field.identification} type="checkbox" onChange={(event) => this.handleCheckboxChange(event, field.library_field_id)} />
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                );
+              } else if (this.checkboxStyle) {
+                console.log("entra checkboxstyle");
+
+                return (
+                  <div class="terms-checkbox-container">
+                    <input type="checkbox" class="input-checkbox-style" onChange={(event) => this.handleCheckboxChange(event, field.library_field_id)} />
+                    <span class="terms-text">Condiciones legales</span>
+                    <span class="see-terms">Ver</span>
+                  </div>
+                )
+              } else {
+                return (
+                  <div class="accept-buttons-container">
+                    <button class="refuse-button">Descartar</button>
+                    <button class="accept-button">Acepto</button>
+                  </div>
+                )
+              }
             }
           })}
           {this.showSubmitButton ? <input class="form-submit" type="submit" value={this.buttonText} /> : null}
