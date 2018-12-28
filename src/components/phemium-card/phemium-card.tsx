@@ -11,6 +11,7 @@ export class PhemiumCard {
   @Prop() phemiumForm: any;
   @Prop() showSubmitButton: boolean = true;
   @Prop() userId: number;
+  @Prop() inputChecked: boolean = false;
   @Prop() userToken: string;
   @Prop() inputFileHidden: boolean = false;
   @Prop() checkboxStyle: boolean = false;
@@ -27,6 +28,8 @@ export class PhemiumCard {
   };
 
   @Event() formCompleted: EventEmitter;
+  @Event() changedCheckbox: EventEmitter;
+  @Event() showInformation: EventEmitter;
 
   componentWillLoad() {
 
@@ -36,7 +39,7 @@ export class PhemiumCard {
    *  Resets inputs of type select and initialize array to return with phemium form values
    */
   componentWillUpdate() {
-    console.log(this.phemiumForm);
+    // console.log(this.phemiumForm);
     this.inputFileClass = this.inputFileHidden ? "input-hidden" : "input-visible";
     this.phemiumForm && this.formValues.length == 0 ? this.formValues = this.phemiumForm.fields.map((field) => {
       return {
@@ -123,6 +126,7 @@ export class PhemiumCard {
     catch (error) {
       response = console.error('Error:', error);
     }
+    this.changedCheckbox.emit(event.target.checked);
     return response;
   }
 
@@ -222,13 +226,11 @@ export class PhemiumCard {
                   </div>
                 );
               } else if (this.checkboxStyle) {
-                console.log("entra checkboxstyle");
-
                 return (
                   <div class="terms-checkbox-container">
-                    <input type="checkbox" class="input-checkbox-style" onChange={(event) => this.handleCheckboxChange(event, field.library_field_id)} />
+                    <input type="checkbox" class="input-checkbox-style" checked={this.inputChecked} onChange={(event) => this.handleCheckboxChange(event, field.library_field_id)} />
                     <span class="terms-text">Condiciones legales</span>
-                    <span class="see-terms">Ver</span>
+                    <span class="see-terms" onClick={() => { this.showInformation.emit() }}>Ver</span>
                   </div>
                 )
               } else {

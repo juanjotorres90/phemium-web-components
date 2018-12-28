@@ -19,6 +19,7 @@ export namespace Components {
     'checkboxStyle': boolean;
     'fakeInputValue': string;
     'formElement': any;
+    'inputChecked': boolean;
     'inputFileClass': string;
     'inputFileHidden': boolean;
     'phemiumForm': any;
@@ -34,9 +35,12 @@ export namespace Components {
     'checkboxStyle'?: boolean;
     'fakeInputValue'?: string;
     'formElement'?: any;
+    'inputChecked'?: boolean;
     'inputFileClass'?: string;
     'inputFileHidden'?: boolean;
+    'onChangedCheckbox'?: (event: CustomEvent) => void;
     'onFormCompleted'?: (event: CustomEvent) => void;
+    'onShowInformation'?: (event: CustomEvent) => void;
     'phemiumForm'?: any;
     'showSubmitButton'?: boolean;
     'toggleStyle'?: boolean;
