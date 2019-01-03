@@ -30,6 +30,8 @@ export class PhemiumCard {
   @Event() formCompleted: EventEmitter;
   @Event() changedCheckbox: EventEmitter;
   @Event() showInformation: EventEmitter;
+  @Event() addFiles: EventEmitter;
+  @Event() deleteFiles: EventEmitter;
 
   componentWillLoad() {
 
@@ -94,11 +96,13 @@ export class PhemiumCard {
    * @param libraryFieldId Id of the modified field in the phemium form.
    */
   handleFileChange(event, libraryFieldId) {
-    const currentValue = event.target.value;
+    console.log(event);
+    const currentValue = event.target.files[this.FIRST_FILE].name;
     this.fakeInputValue = currentValue;
     this.file.item = event.target.files[this.FIRST_FILE];
     this.file.fieldId = libraryFieldId;
     this.hasFiles = true;
+    this.addFiles.emit();
   }
 
   /**
@@ -170,6 +174,18 @@ export class PhemiumCard {
     })[0].value;
   }
 
+  handleFileButton() {
+    if (this.hasFiles) {
+      this.file = {
+        item: "",
+        fieldId: 0
+      };
+      this.hasFiles = false;
+      this.fakeInputValue = "";
+      this.deleteFiles.emit();
+    }
+  }
+
   render() {
     if (this.phemiumForm) {
       return [
@@ -204,14 +220,15 @@ export class PhemiumCard {
                 </select>
               ];
             } else if (field.library_field.type == 17) {
-              return [
+              return (
                 <div class="fake-inut-file-container">
                   <input id="fakeInputFile" class="form-field file-field" value={this.fakeInputValue} />
                   <input type="file" class={`${this.inputFileClass} form-field`}
-                    onChange={(event) => this.handleFileChange(event, field.library_field_id)} />
+                    onInput={(event) => this.handleFileChange(event, field.library_field_id)} />
                   <slot name="file-end" />
+                  {this.hasFiles ? <div class="fake-button" onClick={() => this.handleFileButton()}></div> : null}
                 </div>
-              ];
+              );
             } else if (field.library_field.type == 13) {
               if (this.toggleStyle) {
                 return (

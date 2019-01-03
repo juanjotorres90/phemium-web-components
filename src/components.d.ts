@@ -38,7 +38,9 @@ export namespace Components {
     'inputChecked'?: boolean;
     'inputFileClass'?: string;
     'inputFileHidden'?: boolean;
+    'onAddFiles'?: (event: CustomEvent) => void;
     'onChangedCheckbox'?: (event: CustomEvent) => void;
+    'onDeleteFiles'?: (event: CustomEvent) => void;
     'onFormCompleted'?: (event: CustomEvent) => void;
     'onShowInformation'?: (event: CustomEvent) => void;
     'phemiumForm'?: any;
