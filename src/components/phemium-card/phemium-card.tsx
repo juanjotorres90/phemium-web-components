@@ -22,10 +22,12 @@ export class PhemiumCard {
   @Prop() userId: number;
   @Prop() inputChecked: boolean = false;
   @Prop() userToken: string;
+  @Prop() language: string;
   @Prop() inputFileHidden: boolean = false;
   @Prop() checkboxStyle: boolean = false;
   @Prop() toggleStyle: boolean = false;
   @Prop() buttonText: string;
+  @Prop() showStaticText: boolean = false;
   @Prop({ mutable: true }) inputFileClass: string;
   @Prop({ mutable: true }) formElement: any;
 
@@ -81,7 +83,7 @@ export class PhemiumCard {
     event.preventDefault();
     if (this.hasFiles == true) {
       const resource = await this.uploadResource(this.file.item);
-      this.handleInputChange(resource.resource_url, this.file.fieldId, true);
+      this.handleInputChange(resource.resource_id, this.file.fieldId, true);
     }
     // console.log(this.formValues);
     this.formCompleted.emit(this.formValues);
@@ -133,7 +135,12 @@ export class PhemiumCard {
     formData.append('token', this.userToken);
     formData.append('entity', entity);
     formData.append('method', method);
-    formData.append('arguments', `[{"enduser_id":${this.userId}},[{"library_field_id":${libraryFieldId},"text":"${event.target.checked}"}],"es",${this.phemiumForm.id},false]`);
+    if (!this.toggleStyle && !this.checkboxStyle) {
+      formData.append('arguments', `[{"enduser_id":${this.userId}},[{"library_field_id":${libraryFieldId},"options":[${event}]}],"es",${this.phemiumForm.id},false]`);
+
+    } else {
+      formData.append('arguments', `[{"enduser_id":${this.userId}},[{"library_field_id":${libraryFieldId},"options":[${event.target.checked}]}],"es",${this.phemiumForm.id},false]`);
+    }
 
     let response: void | Promise<any>;
     try {
@@ -146,7 +153,12 @@ export class PhemiumCard {
     catch (error) {
       response = console.error('Error:', error);
     }
-    this.changedCheckbox.emit(event.target.checked);
+    if (!this.toggleStyle && !this.checkboxStyle) {
+      this.changedCheckbox.emit(event);
+    } else {
+      this.changedCheckbox.emit(event.target.checked);
+    }
+
     return response;
   }
 
@@ -203,6 +215,13 @@ export class PhemiumCard {
     }
   }
 
+  getStaticText(field) {
+    const staticText = field.library_field.helps.find((text) => {
+      return text.id == this.language;
+    })
+    return (staticText.value);
+  }
+
   render() {
     if (this.phemiumForm) {
       return [
@@ -217,7 +236,7 @@ export class PhemiumCard {
                   placeholder={fieldName}
                   onInput={(event) => this.handleInputChange(event, field.library_field_id)} />
               );
-            } else if (field.library_field.type == 3 || field.library_field.type == 4) {
+            } else if (field.library_field.type == 3) {
               return [
                 <select class="form-field" onInput={(event) => this.handleInputChange(event, field.library_field_id)}>
                   <option value="" disabled selected hidden>
@@ -246,7 +265,7 @@ export class PhemiumCard {
                   {this.hasFiles ? <div class="fake-button" onClick={() => this.handleFileButton()}></div> : null}
                 </div>
               );
-            } else if (field.library_field.type == 13) {
+            } else if (field.library_field.type == 4) { //13
               if (this.toggleStyle) {
                 return (
                   <div class="notifications-checkbox-container">
@@ -269,12 +288,18 @@ export class PhemiumCard {
                 )
               } else {
                 return (
-                  <div class="accept-buttons-container">
-                    <button class="refuse-button">Descartar</button>
-                    <button class="accept-button">Acepto</button>
+                  <div class="list-buttons-container">
+                    <button id="refuseButton" class="list-button" onClick={() => this.handleCheckboxChange(false, field.library_field_id)}>
+                      Descartar
+                    </button>
+                    <button id="acceptButton" class="list-button" onClick={() => this.handleCheckboxChange(true, field.library_field_id)}>
+                      Aceptar
+                    </button>
                   </div>
                 )
               }
+            } else if (field.library_field.type == 12 && this.showStaticText) {
+              return (<div class="static-text-container" innerHTML={this.getStaticText(field)}></div>)
             }
           })}
           {this.showSubmitButton ? <input class="form-submit" type="submit" value={this.buttonText} /> : null}

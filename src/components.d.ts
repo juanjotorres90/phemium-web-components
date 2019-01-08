@@ -22,7 +22,9 @@ export namespace Components {
     'inputChecked': boolean;
     'inputFileClass': string;
     'inputFileHidden': boolean;
+    'language': string;
     'phemiumForm': any;
+    'showStaticText': boolean;
     'showSubmitButton': boolean;
     'toggleStyle': boolean;
     'userId': number;
@@ -38,12 +40,14 @@ export namespace Components {
     'inputChecked'?: boolean;
     'inputFileClass'?: string;
     'inputFileHidden'?: boolean;
+    'language'?: string;
     'onAddFiles'?: (event: CustomEvent) => void;
     'onChangedCheckbox'?: (event: CustomEvent) => void;
     'onDeleteFiles'?: (event: CustomEvent) => void;
     'onFormCompleted'?: (event: CustomEvent) => void;
     'onShowInformation'?: (event: CustomEvent) => void;
     'phemiumForm'?: any;
+    'showStaticText'?: boolean;
     'showSubmitButton'?: boolean;
     'toggleStyle'?: boolean;
     'userId'?: number;
