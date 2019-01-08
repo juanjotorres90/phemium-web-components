@@ -1,13 +1,22 @@
-import { Component, Prop, State, Event, EventEmitter } from "@stencil/core";
+import { Component, Prop, Event, EventEmitter } from "@stencil/core";
 
 @Component({
   tag: "phemium-card",
   styleUrl: "phemium-card.css"
 })
 export class PhemiumCard {
+  FIRST_FILE: number = 0;
+  initForm: string;
+  @Prop({ mutable: true }) fakeInputValue: string = "Insertar archivo";
+  file: any = {
+    item: "",
+    fieldId: 0
+  };
+  @Prop({ mutable: true }) hasFiles: boolean = false;
+  formValues: any[] = [];
+
 
   @Prop() API_ENDPOINT: string;
-  @Prop() FIRST_FILE: number = 0;
   @Prop() phemiumForm: any;
   @Prop() showSubmitButton: boolean = true;
   @Prop() userId: number;
@@ -19,13 +28,7 @@ export class PhemiumCard {
   @Prop() buttonText: string;
   @Prop({ mutable: true }) inputFileClass: string;
   @Prop({ mutable: true }) formElement: any;
-  @Prop({ mutable: true }) fakeInputValue: string = "Insertar archivo";
-  @State() formValues: any[] = [];
-  @State() hasFiles: boolean = false;
-  @State() file: any = {
-    item: "",
-    fieldId: 0
-  };
+
 
   @Event() formCompleted: EventEmitter;
   @Event() changedCheckbox: EventEmitter;
@@ -43,21 +46,30 @@ export class PhemiumCard {
   componentWillUpdate() {
     // console.log(this.phemiumForm);
     this.inputFileClass = this.inputFileHidden ? "input-hidden" : "input-visible";
-    this.phemiumForm && this.formValues.length == 0 ? this.formValues = this.phemiumForm.fields.map((field) => {
-      return {
-        library_field_id: field.library_field_id,
-        text: ""
-      }
-    }) : null;
+    this.phemiumForm && this.formValues.length == 0 && (this.initForm != this.phemiumForm.external_id) ? this.formValues =
+      this.phemiumForm.fields.map((field) => {
+        if (field.library_field.type == 17) {
+          return {
+            library_field_id: field.library_field_id,
+            files: []
+          }
+        } else {
+          return {
+            library_field_id: field.library_field_id,
+            text: ""
+          }
+        }
+      }) : null;
     const phemiumFormElement = (document.getElementById("phemiumForm") as HTMLFormElement);
     const formElements = phemiumFormElement ? Array.from(phemiumFormElement.elements) : null;
-    if (formElements) {
+    if (formElements && (this.initForm != this.phemiumForm.external_id)) {
       formElements.filter((element: any) => {
         return element.type != 'submit';
       }).map((input: any) => {
         input.value = input.type == "select-one" ? "" : null;
       })
     }
+    this.initForm = this.phemiumForm.external_id;
   }
 
   /**
@@ -69,8 +81,9 @@ export class PhemiumCard {
     event.preventDefault();
     if (this.hasFiles == true) {
       const resource = await this.uploadResource(this.file.item);
-      this.handleInputChange(resource.resource_url, this.file.fieldId);
+      this.handleInputChange(resource.resource_url, this.file.fieldId, true);
     }
+    // console.log(this.formValues);
     this.formCompleted.emit(this.formValues);
     this.hasFiles = false;
   }
@@ -80,12 +93,16 @@ export class PhemiumCard {
    * @param event Property event emited by input.
    * @param libraryFieldId Id of the modified field in the phemium form.
    */
-  handleInputChange(event, libraryFieldId) {
+  handleInputChange(event: any, libraryFieldId: number, isFile?: boolean) {
     const inputValue = event.target && event.target.type != "file" ? event.target.value : event;
     this.formValues.filter((field) => {
       return field.library_field_id == libraryFieldId;
     }).map((fieldValue) => {
-      fieldValue.text = inputValue;
+      if (isFile) {
+        fieldValue.files = [...fieldValue.files, { id: event, value: this.fakeInputValue }];
+      } else {
+        fieldValue.text = inputValue;
+      }
     })
   }
 
@@ -96,7 +113,6 @@ export class PhemiumCard {
    * @param libraryFieldId Id of the modified field in the phemium form.
    */
   handleFileChange(event, libraryFieldId) {
-    console.log(event);
     const currentValue = event.target.files[this.FIRST_FILE].name;
     this.fakeInputValue = currentValue;
     this.file.item = event.target.files[this.FIRST_FILE];
@@ -182,6 +198,7 @@ export class PhemiumCard {
       };
       this.hasFiles = false;
       this.fakeInputValue = "";
+      (document.getElementById("mainInputFile") as HTMLFormElement).value = "";
       this.deleteFiles.emit();
     }
   }
@@ -223,7 +240,7 @@ export class PhemiumCard {
               return (
                 <div class="fake-inut-file-container">
                   <input id="fakeInputFile" class="form-field file-field" value={this.fakeInputValue} />
-                  <input type="file" class={`${this.inputFileClass} form-field`}
+                  <input id="mainInputFile" type="file" class={`${this.inputFileClass} form-field`}
                     onInput={(event) => this.handleFileChange(event, field.library_field_id)} />
                   <slot name="file-end" />
                   {this.hasFiles ? <div class="fake-button" onClick={() => this.handleFileButton()}></div> : null}

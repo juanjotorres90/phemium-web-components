@@ -14,11 +14,11 @@ export namespace Components {
 
   interface PhemiumCard {
     'API_ENDPOINT': string;
-    'FIRST_FILE': number;
     'buttonText': string;
     'checkboxStyle': boolean;
     'fakeInputValue': string;
     'formElement': any;
+    'hasFiles': boolean;
     'inputChecked': boolean;
     'inputFileClass': string;
     'inputFileHidden': boolean;
@@ -30,11 +30,11 @@ export namespace Components {
   }
   interface PhemiumCardAttributes extends StencilHTMLAttributes {
     'API_ENDPOINT'?: string;
-    'FIRST_FILE'?: number;
     'buttonText'?: string;
     'checkboxStyle'?: boolean;
     'fakeInputValue'?: string;
     'formElement'?: any;
+    'hasFiles'?: boolean;
     'inputChecked'?: boolean;
     'inputFileClass'?: string;
     'inputFileHidden'?: boolean;
