@@ -26,6 +26,7 @@ export namespace Components {
     'phemiumForm': any;
     'showStaticText': boolean;
     'showSubmitButton': boolean;
+    'soloText': boolean;
     'toggleStyle': boolean;
     'userId': number;
     'userToken': string;
@@ -49,6 +50,7 @@ export namespace Components {
     'phemiumForm'?: any;
     'showStaticText'?: boolean;
     'showSubmitButton'?: boolean;
+    'soloText'?: boolean;
     'toggleStyle'?: boolean;
     'userId'?: number;
     'userToken'?: string;

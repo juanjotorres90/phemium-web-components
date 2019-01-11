@@ -24,6 +24,7 @@ export class PhemiumCard {
   @Prop() userToken: string;
   @Prop() language: string;
   @Prop() inputFileHidden: boolean = false;
+  @Prop() soloText: boolean = false;
   @Prop() checkboxStyle: boolean = false;
   @Prop() toggleStyle: boolean = false;
   @Prop() buttonText: string;
@@ -287,16 +288,18 @@ export class PhemiumCard {
                   </div>
                 )
               } else {
-                return (
-                  <div class="list-buttons-container">
-                    <button id="refuseButton" class="list-button" onClick={() => this.handleCheckboxChange(false, field.library_field_id)}>
-                      Descartar
+                if (!this.soloText) {
+                  return (
+                    <div class="list-buttons-container">
+                      <button id="refuseButton" class="list-button" onClick={() => this.handleCheckboxChange(false, field.library_field_id)}>
+                        Descartar
                     </button>
-                    <button id="acceptButton" class="list-button" onClick={() => this.handleCheckboxChange(true, field.library_field_id)}>
-                      Aceptar
+                      <button id="acceptButton" class="list-button" onClick={() => this.handleCheckboxChange(true, field.library_field_id)}>
+                        Aceptar
                     </button>
-                  </div>
-                )
+                    </div>
+                  )
+                }
               }
             } else if (field.library_field.type == 12 && this.showStaticText) {
               return (<div class="static-text-container" innerHTML={this.getStaticText(field)}></div>)
