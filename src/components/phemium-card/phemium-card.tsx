@@ -5,33 +5,35 @@ import { Component, Prop, Event, EventEmitter } from "@stencil/core";
   styleUrl: "phemium-card.css"
 })
 export class PhemiumCard {
-  FIRST_FILE: number = 0;
-  initForm: string;
-  @Prop({ mutable: true }) fakeInputValue: string = "Insertar archivo";
+
+  formValues: any[] = [];
   file: any = {
     item: "",
     fieldId: 0
   };
-  @Prop({ mutable: true }) hasFiles: boolean = false;
-  formValues: any[] = [];
+  initForm: string;
+  FIRST_FILE: number = 0;
 
+
+  @Prop() phemiumForm: any;
+  @Prop({ mutable: true }) formElement: any;
 
   @Prop() API_ENDPOINT: string;
-  @Prop() phemiumForm: any;
-  @Prop() showSubmitButton: boolean = true;
-  @Prop() userId: number;
-  @Prop() inputChecked: boolean = false;
+  @Prop() buttonText: string;
+  @Prop({ mutable: true }) inputFileClass: string;
+  @Prop({ mutable: true }) fakeInputValue: string = "Insertar archivo";
   @Prop() userToken: string;
   @Prop() language: string;
+  @Prop() userId: number;
+
+  @Prop() showSubmitButton: boolean = true;
+  @Prop({ mutable: true }) hasFiles: boolean = false;
+  @Prop() inputChecked: boolean = false;
   @Prop() inputFileHidden: boolean = false;
   @Prop() soloText: boolean = false;
   @Prop() checkboxStyle: boolean = false;
   @Prop() toggleStyle: boolean = false;
-  @Prop() buttonText: string;
   @Prop() showStaticText: boolean = false;
-  @Prop({ mutable: true }) inputFileClass: string;
-  @Prop({ mutable: true }) formElement: any;
-
 
   @Event() formCompleted: EventEmitter;
   @Event() changedCheckbox: EventEmitter;
@@ -203,6 +205,10 @@ export class PhemiumCard {
     })[0].value;
   }
 
+  /**
+   * Function to delete files when user selected one and emit an event in case is needed to make some
+   * changes when this action happens.
+   */
   handleFileButton() {
     if (this.hasFiles) {
       this.file = {
@@ -215,7 +221,11 @@ export class PhemiumCard {
       this.deleteFiles.emit();
     }
   }
-
+  /**
+   * 
+   * @param field Object of the field in phemium form.
+   * Function that takes the static text from a field in the current language.
+   */
   getStaticText(field) {
     const staticText = field.library_field.helps.find((text) => {
       return text.id == this.language;
