@@ -1,4 +1,4 @@
-import { Component, Prop, State, Event, EventEmitter } from "@stencil/core";
+import { Component, Prop, Event, EventEmitter } from "@stencil/core";
 
 @Component({
   tag: "phemium-card",
@@ -6,25 +6,40 @@ import { Component, Prop, State, Event, EventEmitter } from "@stencil/core";
 })
 export class PhemiumCard {
 
-  @Prop() API_ENDPOINT: string;
-  @Prop() FIRST_FILE: number = 0;
-  @Prop() phemiumForm: any;
-  @Prop() showSubmitButton: boolean = true;
-  @Prop() userId: number;
-  @Prop() userToken: string;
-  @Prop() inputFileHidden: boolean = false;
-  @Prop() buttonText: string;
-  @Prop({ mutable: true }) inputFileClass: string;
-  @Prop({ mutable: true }) formElement: any;
-  @Prop({ mutable: true }) fakeInputValue: string = "Insertar archivo";
-  @State() formValues: any[] = [];
-  @State() hasFiles: boolean = false;
-  @State() file: any = {
+  formValues: any[] = [];
+  file: any = {
     item: "",
     fieldId: 0
   };
+  initForm: string;
+  FIRST_FILE: number = 0;
+
+
+  @Prop() phemiumForm: any;
+  @Prop({ mutable: true }) formElement: any;
+
+  @Prop() API_ENDPOINT: string;
+  @Prop() buttonText: string;
+  @Prop({ mutable: true }) inputFileClass: string;
+  @Prop({ mutable: true }) fakeInputValue: string = "Insertar archivo";
+  @Prop() userToken: string;
+  @Prop() language: string;
+  @Prop() userId: number;
+
+  @Prop() showSubmitButton: boolean = true;
+  @Prop({ mutable: true }) hasFiles: boolean = false;
+  @Prop() inputChecked: boolean = false;
+  @Prop() inputFileHidden: boolean = false;
+  @Prop() soloText: boolean = false;
+  @Prop() checkboxStyle: boolean = false;
+  @Prop() toggleStyle: boolean = false;
+  @Prop() showStaticText: boolean = false;
 
   @Event() formCompleted: EventEmitter;
+  @Event() changedCheckbox: EventEmitter;
+  @Event() showInformation: EventEmitter;
+  @Event() addFiles: EventEmitter;
+  @Event() deleteFiles: EventEmitter;
 
   componentWillLoad() {
 
@@ -36,21 +51,30 @@ export class PhemiumCard {
   componentWillUpdate() {
     // console.log(this.phemiumForm);
     this.inputFileClass = this.inputFileHidden ? "input-hidden" : "input-visible";
-    this.phemiumForm && this.formValues.length == 0 ? this.formValues = this.phemiumForm.fields.map((field) => {
-      return {
-        library_field_id: field.library_field_id,
-        text: ""
-      }
-    }) : null;
+    this.phemiumForm && this.formValues.length == 0 && (this.initForm != this.phemiumForm.external_id) ? this.formValues =
+      this.phemiumForm.fields.map((field) => {
+        if (field.library_field.type == 17) {
+          return {
+            library_field_id: field.library_field_id,
+            files: []
+          }
+        } else {
+          return {
+            library_field_id: field.library_field_id,
+            text: ""
+          }
+        }
+      }) : null;
     const phemiumFormElement = (document.getElementById("phemiumForm") as HTMLFormElement);
     const formElements = phemiumFormElement ? Array.from(phemiumFormElement.elements) : null;
-    if (formElements) {
+    if (formElements && (this.initForm != this.phemiumForm.external_id)) {
       formElements.filter((element: any) => {
         return element.type != 'submit';
       }).map((input: any) => {
         input.value = input.type == "select-one" ? "" : null;
       })
     }
+    this.initForm = this.phemiumForm.external_id;
   }
 
   /**
@@ -62,8 +86,9 @@ export class PhemiumCard {
     event.preventDefault();
     if (this.hasFiles == true) {
       const resource = await this.uploadResource(this.file.item);
-      this.handleInputChange(resource.resource_url, this.file.fieldId);
+      this.handleInputChange(resource.resource_id, this.file.fieldId, true);
     }
+    // console.log(this.formValues);
     this.formCompleted.emit(this.formValues);
     this.hasFiles = false;
   }
@@ -73,12 +98,16 @@ export class PhemiumCard {
    * @param event Property event emited by input.
    * @param libraryFieldId Id of the modified field in the phemium form.
    */
-  handleInputChange(event, libraryFieldId) {
+  handleInputChange(event: any, libraryFieldId: number, isFile?: boolean) {
     const inputValue = event.target && event.target.type != "file" ? event.target.value : event;
     this.formValues.filter((field) => {
       return field.library_field_id == libraryFieldId;
     }).map((fieldValue) => {
-      fieldValue.text = inputValue;
+      if (isFile) {
+        fieldValue.files = [...fieldValue.files, { id: event, value: this.fakeInputValue }];
+      } else {
+        fieldValue.text = inputValue;
+      }
     })
   }
 
@@ -89,11 +118,12 @@ export class PhemiumCard {
    * @param libraryFieldId Id of the modified field in the phemium form.
    */
   handleFileChange(event, libraryFieldId) {
-    const currentValue = event.target.value;
+    const currentValue = event.target.files[this.FIRST_FILE].name;
     this.fakeInputValue = currentValue;
     this.file.item = event.target.files[this.FIRST_FILE];
     this.file.fieldId = libraryFieldId;
     this.hasFiles = true;
+    this.addFiles.emit();
   }
 
   /**
@@ -108,7 +138,12 @@ export class PhemiumCard {
     formData.append('token', this.userToken);
     formData.append('entity', entity);
     formData.append('method', method);
-    formData.append('arguments', `[{"enduser_id":${this.userId}},[{"library_field_id":${libraryFieldId},"text":"${event.target.checked}"}],"es",${this.phemiumForm.id},false]`);
+    if (!this.toggleStyle && !this.checkboxStyle) {
+      formData.append('arguments', `[{"enduser_id":${this.userId}},[{"library_field_id":${libraryFieldId},"options":[${event}]}],"es",${this.phemiumForm.id},false]`);
+
+    } else {
+      formData.append('arguments', `[{"enduser_id":${this.userId}},[{"library_field_id":${libraryFieldId},"options":[${event.target.checked}]}],"es",${this.phemiumForm.id},false]`);
+    }
 
     let response: void | Promise<any>;
     try {
@@ -121,6 +156,12 @@ export class PhemiumCard {
     catch (error) {
       response = console.error('Error:', error);
     }
+    if (!this.toggleStyle && !this.checkboxStyle) {
+      this.changedCheckbox.emit(event);
+    } else {
+      this.changedCheckbox.emit(event.target.checked);
+    }
+
     return response;
   }
 
@@ -164,6 +205,34 @@ export class PhemiumCard {
     })[0].value;
   }
 
+  /**
+   * Function to delete files when user selected one and emit an event in case is needed to make some
+   * changes when this action happens.
+   */
+  handleFileButton() {
+    if (this.hasFiles) {
+      this.file = {
+        item: "",
+        fieldId: 0
+      };
+      this.hasFiles = false;
+      this.fakeInputValue = "";
+      (document.getElementById("mainInputFile") as HTMLFormElement).value = "";
+      this.deleteFiles.emit();
+    }
+  }
+  /**
+   * 
+   * @param field Object of the field in phemium form.
+   * Function that takes the static text from a field in the current language.
+   */
+  getStaticText(field) {
+    const staticText = field.library_field.helps.find((text) => {
+      return text.id == this.language;
+    })
+    return (staticText.value);
+  }
+
   render() {
     if (this.phemiumForm) {
       return [
@@ -178,7 +247,7 @@ export class PhemiumCard {
                   placeholder={fieldName}
                   onInput={(event) => this.handleInputChange(event, field.library_field_id)} />
               );
-            } else if (field.library_field.type == 3 || field.library_field.type == 4) {
+            } else if (field.library_field.type == 3) {
               return [
                 <select class="form-field" onInput={(event) => this.handleInputChange(event, field.library_field_id)}>
                   <option value="" disabled selected hidden>
@@ -198,26 +267,52 @@ export class PhemiumCard {
                 </select>
               ];
             } else if (field.library_field.type == 17) {
-              return [
+              return (
                 <div class="fake-inut-file-container">
                   <input id="fakeInputFile" class="form-field file-field" value={this.fakeInputValue} />
-                  <input type="file" class={`${this.inputFileClass} form-field`}
-                    onChange={(event) => this.handleFileChange(event, field.library_field_id)} />
+                  <input id="mainInputFile" type="file" class={`${this.inputFileClass} form-field`}
+                    onInput={(event) => this.handleFileChange(event, field.library_field_id)} />
                   <slot name="file-end" />
+                  {this.hasFiles ? <div class="fake-button" onClick={() => this.handleFileButton()}></div> : null}
                 </div>
-              ];
-            } else if (field.library_field.type == 13) {
-              return [
-                <div class="input-checkbox-container">
-                  <span class="notifications-text">
-                    {fieldName}
-                  </span>
-                  <label class="switch notifications-toggle">
-                    <input id={field.library_field.identification} type="checkbox" onChange={(event) => this.handleCheckboxChange(event, field.library_field_id)} />
-                    <span class="slider round"></span>
-                  </label>
-                </div>
-              ];
+              );
+            } else if (field.library_field.type == 4) { //13
+              if (this.toggleStyle) {
+                return (
+                  <div class="notifications-checkbox-container">
+                    <span class="notifications-text">
+                      {fieldName}
+                    </span>
+                    <label class="switch notifications-toggle">
+                      <input id={field.library_field.identification} type="checkbox" onChange={(event) => this.handleCheckboxChange(event, field.library_field_id)} />
+                      <span class="slider round"></span>
+                    </label>
+                  </div>
+                );
+              } else if (this.checkboxStyle) {
+                return (
+                  <div class="terms-checkbox-container">
+                    <input type="checkbox" class="input-checkbox-style" checked={this.inputChecked} onChange={(event) => this.handleCheckboxChange(event, field.library_field_id)} />
+                    <span class="terms-text">Condiciones legales</span>
+                    <span class="see-terms" onClick={() => { this.showInformation.emit() }}>Ver</span>
+                  </div>
+                )
+              } else {
+                if (!this.soloText) {
+                  return (
+                    <div class="list-buttons-container">
+                      <button id="refuseButton" class="list-button" onClick={() => this.handleCheckboxChange(false, field.library_field_id)}>
+                        Descartar
+                    </button>
+                      <button id="acceptButton" class="list-button" onClick={() => this.handleCheckboxChange(true, field.library_field_id)}>
+                        Aceptar
+                    </button>
+                    </div>
+                  )
+                }
+              }
+            } else if (field.library_field.type == 12 && this.showStaticText) {
+              return (<div class="static-text-container" innerHTML={this.getStaticText(field)}></div>)
             }
           })}
           {this.showSubmitButton ? <input class="form-submit" type="submit" value={this.buttonText} /> : null}

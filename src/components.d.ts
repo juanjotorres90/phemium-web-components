@@ -14,28 +14,44 @@ export namespace Components {
 
   interface PhemiumCard {
     'API_ENDPOINT': string;
-    'FIRST_FILE': number;
     'buttonText': string;
+    'checkboxStyle': boolean;
     'fakeInputValue': string;
     'formElement': any;
+    'hasFiles': boolean;
+    'inputChecked': boolean;
     'inputFileClass': string;
     'inputFileHidden': boolean;
+    'language': string;
     'phemiumForm': any;
+    'showStaticText': boolean;
     'showSubmitButton': boolean;
+    'soloText': boolean;
+    'toggleStyle': boolean;
     'userId': number;
     'userToken': string;
   }
   interface PhemiumCardAttributes extends StencilHTMLAttributes {
     'API_ENDPOINT'?: string;
-    'FIRST_FILE'?: number;
     'buttonText'?: string;
+    'checkboxStyle'?: boolean;
     'fakeInputValue'?: string;
     'formElement'?: any;
+    'hasFiles'?: boolean;
+    'inputChecked'?: boolean;
     'inputFileClass'?: string;
     'inputFileHidden'?: boolean;
+    'language'?: string;
+    'onAddFiles'?: (event: CustomEvent) => void;
+    'onChangedCheckbox'?: (event: CustomEvent) => void;
+    'onDeleteFiles'?: (event: CustomEvent) => void;
     'onFormCompleted'?: (event: CustomEvent) => void;
+    'onShowInformation'?: (event: CustomEvent) => void;
     'phemiumForm'?: any;
+    'showStaticText'?: boolean;
     'showSubmitButton'?: boolean;
+    'soloText'?: boolean;
+    'toggleStyle'?: boolean;
     'userId'?: number;
     'userToken'?: string;
   }
