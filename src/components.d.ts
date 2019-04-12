@@ -23,6 +23,7 @@ export namespace Components {
     'inputFileClass': string;
     'inputFileHidden': boolean;
     'language': string;
+    'maxFileSize': number;
     'phemiumForm': any;
     'showStaticText': boolean;
     'showSubmitButton': boolean;
@@ -42,11 +43,15 @@ export namespace Components {
     'inputFileClass'?: string;
     'inputFileHidden'?: boolean;
     'language'?: string;
+    'maxFileSize'?: number;
     'onAddFiles'?: (event: CustomEvent) => void;
     'onChangedCheckbox'?: (event: CustomEvent) => void;
     'onDeleteFiles'?: (event: CustomEvent) => void;
+    'onExceedFileSize'?: (event: CustomEvent) => void;
+    'onFilesUploaded'?: (event: CustomEvent) => void;
     'onFormCompleted'?: (event: CustomEvent) => void;
     'onShowInformation'?: (event: CustomEvent) => void;
+    'onUploadingFiles'?: (event: CustomEvent) => void;
     'phemiumForm'?: any;
     'showStaticText'?: boolean;
     'showSubmitButton'?: boolean;
