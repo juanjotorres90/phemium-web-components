@@ -125,8 +125,7 @@ export class PhemiumCard {
    * @param libraryFieldId Id of the modified field in the phemium form.
    */
   handleFileChange(event, libraryFieldId) {
-    console.log(event);
-    if (event.target.size > this.maxFileSize) {
+    if (this.maxFileSize !== null && (event.target.files[this.FIRST_FILE].size) > this.maxFileSize) {
       this.exceedFileSize.emit();
     } else {
       const currentValue = event.target.files[this.FIRST_FILE].name;
