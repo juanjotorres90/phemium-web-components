@@ -16,7 +16,6 @@ export namespace Components {
     'API_ENDPOINT': string;
     'buttonText': string;
     'checkboxStyle': boolean;
-    'fakeInputValue': string;
     'formElement': any;
     'hasFiles': boolean;
     'inputChecked': boolean;
@@ -36,7 +35,6 @@ export namespace Components {
     'API_ENDPOINT'?: string;
     'buttonText'?: string;
     'checkboxStyle'?: boolean;
-    'fakeInputValue'?: string;
     'formElement'?: any;
     'hasFiles'?: boolean;
     'inputChecked'?: boolean;
