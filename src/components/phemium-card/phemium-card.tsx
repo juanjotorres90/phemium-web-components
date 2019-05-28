@@ -1,4 +1,4 @@
-import { Component, Prop, Event, EventEmitter } from "@stencil/core";
+import { Component, Prop, Event, EventEmitter, State } from "@stencil/core";
 
 @Component({
   tag: "phemium-card",
@@ -19,7 +19,7 @@ export class PhemiumCard {
   @Prop() API_ENDPOINT: string;
   @Prop() buttonText: string;
   @Prop({ mutable: true }) inputFileClass: string;
-  @Prop({ mutable: true }) fakeInputValue: string = "Insertar archivo";
+  @State() fakeInputValue = "Insertar archivo";
   @Prop() userToken: string;
   @Prop() language: string;
   @Prop() userId: number;
@@ -125,6 +125,8 @@ export class PhemiumCard {
    * @param libraryFieldId Id of the modified field in the phemium form.
    */
   handleFileChange(event, libraryFieldId) {
+    console.log("entra a handle");
+
     if (this.maxFileSize !== null && (event.target.files[this.FIRST_FILE].size) > this.maxFileSize) {
       this.exceedFileSize.emit();
     } else {
@@ -227,7 +229,7 @@ export class PhemiumCard {
    * Function to delete files when user selected one and emit an event in case is needed to make some
    * changes when this action happens.
    */
-  handleFileButton() {
+  handleFileButton() {    
     if (this.hasFiles) {
       this.file = {
         item: "",
@@ -293,7 +295,7 @@ export class PhemiumCard {
                     id="mainInputFile"
                     type="file"
                     class={`${this.inputFileClass} form-field`}
-                    onInput={event => this.handleFileChange(event, field.library_field_id)}
+                    onChange={event => this.handleFileChange(event, field.library_field_id)}
                   />
                   <slot name="file-end" />
                   {this.hasFiles ? <div class="fake-button" onClick={() => this.handleFileButton()} /> : null}
