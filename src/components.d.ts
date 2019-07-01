@@ -5,92 +5,48 @@
  */
 
 
-import '@stencil/core';
-
-
+import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
-
-  interface PhemiumCard {
-    'API_ENDPOINT': string;
-    'buttonText': string;
-    'checkboxStyle': boolean;
-    'formElement': any;
-    'hasFiles': boolean;
-    'inputChecked': boolean;
-    'inputFileClass': string;
-    'inputFileHidden': boolean;
-    'language': string;
-    'maxFileSize': number;
-    'phemiumForm': any;
-    'showStaticText': boolean;
-    'showSubmitButton': boolean;
-    'soloText': boolean;
-    'toggleStyle': boolean;
-    'userId': number;
-    'userToken': string;
-  }
-  interface PhemiumCardAttributes extends StencilHTMLAttributes {
-    'API_ENDPOINT'?: string;
-    'buttonText'?: string;
-    'checkboxStyle'?: boolean;
-    'formElement'?: any;
-    'hasFiles'?: boolean;
-    'inputChecked'?: boolean;
-    'inputFileClass'?: string;
-    'inputFileHidden'?: boolean;
-    'language'?: string;
-    'maxFileSize'?: number;
-    'onAddFiles'?: (event: CustomEvent) => void;
-    'onChangedCheckbox'?: (event: CustomEvent) => void;
-    'onDeleteFiles'?: (event: CustomEvent) => void;
-    'onExceedFileSize'?: (event: CustomEvent) => void;
-    'onFilesUploaded'?: (event: CustomEvent) => void;
-    'onFormCompleted'?: (event: CustomEvent) => void;
-    'onShowInformation'?: (event: CustomEvent) => void;
-    'onUploadingFiles'?: (event: CustomEvent) => void;
-    'phemiumForm'?: any;
-    'showStaticText'?: boolean;
-    'showSubmitButton'?: boolean;
-    'soloText'?: boolean;
-    'toggleStyle'?: boolean;
-    'userId'?: number;
-    'userToken'?: string;
+  interface PhemiumPush {
+    'active': boolean;
+    'appId': string;
+    'showPushInstances': () => Promise<void>;
   }
 }
 
 declare global {
-  interface StencilElementInterfaces {
-    'PhemiumCard': Components.PhemiumCard;
-  }
-
-  interface StencilIntrinsicElements {
-    'phemium-card': Components.PhemiumCardAttributes;
-  }
 
 
-  interface HTMLPhemiumCardElement extends Components.PhemiumCard, HTMLStencilElement {}
-  var HTMLPhemiumCardElement: {
-    prototype: HTMLPhemiumCardElement;
-    new (): HTMLPhemiumCardElement;
+  interface HTMLPhemiumPushElement extends Components.PhemiumPush, HTMLStencilElement {}
+  var HTMLPhemiumPushElement: {
+    prototype: HTMLPhemiumPushElement;
+    new (): HTMLPhemiumPushElement;
   };
-
   interface HTMLElementTagNameMap {
-    'phemium-card': HTMLPhemiumCardElement
+    'phemium-push': HTMLPhemiumPushElement;
   }
-
-  interface ElementTagNameMap {
-    'phemium-card': HTMLPhemiumCardElement;
-  }
-
-
-  export namespace JSX {
-    export interface Element {}
-    export interface IntrinsicElements extends StencilIntrinsicElements {
-      [tagName: string]: any;
-    }
-  }
-  export interface HTMLAttributes extends StencilHTMLAttributes {}
-
 }
+
+declare namespace LocalJSX {
+  interface PhemiumPush extends JSXBase.HTMLAttributes<HTMLPhemiumPushElement> {
+    'active'?: boolean;
+    'appId'?: string;
+  }
+
+  interface IntrinsicElements {
+    'phemium-push': PhemiumPush;
+  }
+}
+
+export { LocalJSX as JSX };
+
+
+declare module "@stencil/core" {
+  export namespace JSX {
+    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
+  }
+}
+
+
