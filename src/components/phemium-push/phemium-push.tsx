@@ -12,7 +12,7 @@ export class phemiumPush {
   API_ENDPOINT = 'https://api-dev.phemium.com/v1/api/';
   push: any;
   pushVoip: any;
-  token = '1bdb6786dba710ad4b920e5677ff34b0b66ee326';
+  token = '6d3e10c9050d54a922a7a1ca2e3c98957400b08e';
 
   @State() notificationBox: any;
   @State() message: string;
