@@ -12,9 +12,9 @@ export class phemiumPush {
   API_ENDPOINT = 'https://api-dev.phemium.com/v1/api/';
   push: any;
   pushVoip: any;
+  token = '1bdb6786dba710ad4b920e5677ff34b0b66ee326';
 
   @State() notificationBox: any;
-
   @State() message: string;
 
   @Prop({ reflectToAttr: true }) active = false;
@@ -38,7 +38,7 @@ export class phemiumPush {
 
   async initPush() {
     await this.initializePush();
-    await this.initializeVoip();
+    // await this.initializeVoip();
   }
 
   initializePush(){
@@ -60,38 +60,25 @@ export class phemiumPush {
       this.push.on('registration', async data => {
         // data.registrationId
         window.console.log('registration push');
-  
         window.console.log('PUSH REGISTRATION DATA', data);
-  
-        // const args: any[] = [
-        //   {
-        //     platform: window.device.platform,
-        //     app_id: this.appId,
-        //     registration_token: data.registrationId,
-        //     device_uuid: window.device.uuid,
-        //     ios_environment: ''
-        //   }
-        // ];
-  
+
         const entity = 'endusers';
         const method = 'update_push_notications_token_info';
-        const token = 'a109482b1aeea8effe51f444734428b6c0a17f03';
+        const token = this.token;
         let formDataPush = new FormData();
         formDataPush.append('token', token);
         formDataPush.append('entity', entity);
         formDataPush.append('method', method);
         formDataPush.append(
           'arguments',
-          `[
-            {"platform":"${window.device.platform.toLowerCase()}", 
+          `[{
+            "platform":"${window.device.platform.toLowerCase()}", 
             "app_id":"${this.appId}",
             "registration_token":"${data.registrationId}",
             "device_uuid":"${window.device.uuid}",
-            "ios_environment": "sandbox"}
-          ]`
+            "ios_environment": "sandbox"
+          }]`
         );
-  
-        
   
         let response: void | Promise<any>;
         try {
@@ -123,7 +110,6 @@ export class phemiumPush {
   
       this.push.on('error', e => {
         window.console.log('ERROR PUSH: ', e);
-  
         // e.message
       });
     })
@@ -147,32 +133,22 @@ export class phemiumPush {
         window.console.log('registration voip');
         window.console.log('PUSH REGISTRATION DATA', data);
   
-        // const args: any[] = [
-        //   {
-        //     platform: window.device.platform,
-        //     app_id: this.appId,
-        //     registration_token: data.registrationId,
-        //     device_uuid: window.device.uuid,
-        //     ios_environment: ''
-        //   }
-        // ];
-  
         const entity = 'endusers';
         const method = 'update_push_notications_token_info';
-        const token = 'a109482b1aeea8effe51f444734428b6c0a17f03';
+        const token = this.token;
         let formDataPushVoip = new FormData();
         formDataPushVoip.append('token', token);
         formDataPushVoip.append('entity', entity);
         formDataPushVoip.append('method', method);
         formDataPushVoip.append(
           'arguments',
-          `[
-            {"platform":"${window.device.platform.toLowerCase()}", 
+          `[{
+            "platform":"${window.device.platform.toLowerCase()}", 
             "app_id":"${this.appId}.voip",
             "registration_token":"${data.registrationId}",
             "device_uuid":"${window.device.uuid}",
-            "ios_environment": "sandbox"}
-          ]`
+            "ios_environment": "sandbox"
+          }]`
         );
   
         let response: void | Promise<any>;
@@ -217,7 +193,7 @@ export class phemiumPush {
       appointment_external_id: null,
       consultation_id: '3',
       customer_id: null,
-      enduser_token: 'a109482b1aeea8effe51f444734428b6c0a17f03',
+      enduser_token: this.token,
       environment: 'dev',
       extraUseCallkit: 'false',
       face2face: 'false',
