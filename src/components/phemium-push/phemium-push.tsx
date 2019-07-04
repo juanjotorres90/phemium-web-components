@@ -1,4 +1,5 @@
-import { Component, Prop, h, State, Listen, Method } from '@stencil/core';
+import { Component, Prop, h, State, Method, Listen } from '@stencil/core';
+import firebase from 'firebase/app';
 // import { format } from '../../utils/utils';
 
 declare const window;
@@ -12,22 +13,32 @@ export class phemiumPush {
   API_ENDPOINT = 'https://api-dev.phemium.com/v1/api/';
   push: any;
   pushVoip: any;
-  token = '6d3e10c9050d54a922a7a1ca2e3c98957400b08e';
+  consultationId: number;
 
   @State() notificationBox: any;
   @State() message: string;
 
   @Prop({ reflectToAttr: true }) active = false;
   @Prop() appId: string;
+  @Prop() token: string;
+  @Prop() phemiumConfig: any;
 
   @Listen('deviceready', { target: 'document' })
-  protected devicereadyHandler(event) {
-    console.log('Received the "deviceready" event: ', event);
-    this.initPush();
+  protected async devicereadyHandler(event) {
+    window.console.log('Received the "deviceready" event: ', event);
+    await this.initializePhonegapPush();
+  }
+
+  componentWillLoad() {
+    !!!window.cordova ? this.askForPermissioToReceiveNotifications() : null;
   }
 
   componentDidLoad() {
     this.draggable(this.notificationBox);
+  }
+
+  componentDidUpdate() {
+    window.console.log('phemiumConfig: ', this.phemiumConfig);
   }
 
   @Method()
@@ -36,13 +47,33 @@ export class phemiumPush {
     window.console.log(this.pushVoip);
   }
 
-  async initPush() {
-    await this.initializePush();
+  @Method()
+  async initialize() {
+    return this.initializePhonegapPush();
     // await this.initializeVoip();
   }
 
-  initializePush(){
-    return new Promise((resolve, reject)=>{
+  async askForPermissioToReceiveNotifications() {
+    try {
+      const messaging = firebase.messaging();
+      console.log(messaging);
+      await messaging.requestPermission();
+      const token = await messaging.getToken();
+      console.log('token de usuario:', token);
+
+      return token;
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async initializePhonegapPush() {
+    return new Promise((resolve, reject) => {
+      if (!this.token) {
+        reject('No user token found');
+        return;
+      }
+
       this.push = window.PushNotification.init({
         android: {
           alert: 'true',
@@ -56,10 +87,34 @@ export class phemiumPush {
         }
       });
 
-  
+      this.push.on('notification', data => {
+        window.console.log('PUSH MESSAGE PAYLOAD: ', data);
+        window.console.log('PUSH MESSAGE DATA: ', data.message);
+
+        if (data.additionalData.foreground) {
+          this.consultationId = data.additionalData.consultation_id;
+          this.message = data.message;
+          this.active = true;
+        } else {
+          this.consultationId = data.additionalData.consultation_id;
+          this.openEnduser();
+        }
+
+        // data.message,
+        // data.title,
+        // data.count,
+        // data.sound,
+        // data.image,
+        // data.additionalData
+      });
+
+      this.push.on('error', e => {
+        window.console.log('ERROR PUSH: ', e);
+        // e.message
+      });
+
       this.push.on('registration', async data => {
         // data.registrationId
-        window.console.log('registration push');
         window.console.log('PUSH REGISTRATION DATA', data);
 
         const entity = 'endusers';
@@ -79,7 +134,7 @@ export class phemiumPush {
             "ios_environment": "sandbox"
           }]`
         );
-  
+
         let response: void | Promise<any>;
         try {
           const res = await fetch(this.API_ENDPOINT, {
@@ -88,133 +143,68 @@ export class phemiumPush {
           });
           response = await res.json();
           window.console.log(response);
-          resolve();
+          resolve(data);
         } catch (error) {
           response = console.error('Error:', error);
-          reject();
+          reject(error);
         }
       });
-  
-      this.push.on('notification', data => {
-        window.console.log('PUSH MESSAGE DATA: ', data.message);
-        this.message = data.message;
-        this.active = true;
-  
-        // data.message,
-        // data.title,
-        // data.count,
-        // data.sound,
-        // data.image,
-        // data.additionalData
-      });
-  
-      this.push.on('error', e => {
-        window.console.log('ERROR PUSH: ', e);
-        // e.message
-      });
-    })
-  }
-
-  initializeVoip(){
-    return new Promise((resolve, reject)=>{
-      this.pushVoip = window.PushNotification.init({
-        android: {
-          alert: 'true',
-          badge: 'true',
-          sound: 'true'
-        },
-        ios: {
-          voip: 'true'
-        }
-      });
-
-      this.pushVoip.on('registration', async data => {
-        // data.registrationId
-        window.console.log('registration voip');
-        window.console.log('PUSH REGISTRATION DATA', data);
-  
-        const entity = 'endusers';
-        const method = 'update_push_notications_token_info';
-        const token = this.token;
-        let formDataPushVoip = new FormData();
-        formDataPushVoip.append('token', token);
-        formDataPushVoip.append('entity', entity);
-        formDataPushVoip.append('method', method);
-        formDataPushVoip.append(
-          'arguments',
-          `[{
-            "platform":"${window.device.platform.toLowerCase()}", 
-            "app_id":"${this.appId}.voip",
-            "registration_token":"${data.registrationId}",
-            "device_uuid":"${window.device.uuid}",
-            "ios_environment": "sandbox"
-          }]`
-        );
-  
-        let response: void | Promise<any>;
-        try {
-          const res = await fetch(this.API_ENDPOINT, {
-            method: 'POST',
-            body: formDataPushVoip
-          });
-          response = await res.json();
-          window.console.log(response);
-          resolve();
-        } catch (error) {
-          response = console.error('Error:', error);
-          reject();
-        }
-      });
-  
-      this.pushVoip.on('notification', data => {
-        window.console.log('PUSH MESSAGE VOIP DATA: ', data.message);
-        this.message = data.message;
-        this.active = true;
-  
-        // data.message,
-        // data.title,
-        // data.count,
-        // data.sound,
-        // data.image,
-        // data.additionalData
-      });
-  
-      this.pushVoip.on('error', e => {
-        window.console.log('ERROR PUSH: ', e);
-        // e.message
-      });
-    })
+    });
   }
 
   openEnduser() {
-    // this.active = false;
-    var test_settings = {
-      action: null,
-      appointment_external_id: null,
-      consultation_id: '3',
-      customer_id: null,
-      enduser_token: this.token,
-      environment: 'dev',
-      extraUseCallkit: 'false',
-      face2face: 'false',
-      lng: null,
-      origin_url: '',
-      portal_name: 'CSI',
-      service_id: '',
-      show_consultations_by_status: null,
-      theme: 'csi',
-      tls: '0',
-      voip_notifications: 'false',
-      wkwebview_type: 'ionic'
+    // if (window.cordova) {
+    //   var test_settings = {
+    //     action: null,
+    //     appointment_external_id: null,
+    //     consultation_id: this.consultationId,
+    //     customer_id: null,
+    //     enduser_token: this.token,
+    //     environment: 'dev',
+    //     extraUseCallkit: 'false',
+    //     face2face: 'false',
+    //     lng: null,
+    //     origin_url: '',
+    //     portal_name: 'CSI',
+    //     service_id: '',
+    //     show_consultations_by_status: null,
+    //     theme: 'csi',
+    //     tls: '0',
+    //     voip_notifications: 'false',
+    //     wkwebview_type: 'ionic'
+    //   };
+    //   window.console.log(test_settings);
+    //   // window.localStorage.setItem('test_settings', JSON.stringify(test_settings));
+    //   const plugin = new window.plugins.PhemiumEnduserPlugin();
+    //   plugin.open_consultation(test_settings);
+    // } else {
+    // window.phemiumEEL.set_callback("redirect", () => {
+    //   this.router.navigateByUrl("consultations");
+    // });
+    const phemiumConfig = {
+      phemium_environment_url: this.API_ENDPOINT,
+      customer: this.phemiumConfig.customer, //dubto
+      portal: 'csi', //dubto
+      token: this.phemiumConfig.token,
+      enduser_id: this.phemiumConfig.enduserId,
+      consultation_id: this.consultationId,
+      open_urls_target: 'fsw',
+      hide_header: 'false'
     };
+    const webAppElement = document.querySelector('#phemium-webapp');
+    window.phemiumEEL.init(phemiumConfig);
+    // window.phemiumEEL.consultationLoaded(async () => {
+    //   setTimeout(async () => {
+    //     // this.phemiumHidden = false;
+    //     // this.cdRef.detectChanges();
+    //     // await this.loadingService.dismiss();
+    //   }, 2000);
+    // });
 
-    console.log(test_settings);
-
-    window.localStorage.setItem('test_settings', JSON.stringify(test_settings));
-
-    var plugin = new window.plugins.PhemiumEnduserPlugin();
-
-    plugin.open_consultation(test_settings);
+    window.phemiumEEL.set_iframe(webAppElement);
+    // // this.consultationOpened = true;
+    // }
+    this.active = false;
   }
 
   draggable(el) {
