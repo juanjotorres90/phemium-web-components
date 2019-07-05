@@ -1,9 +1,7 @@
-import { Component, Prop, h, State, Method, Listen } from '@stencil/core';
-import firebase from 'firebase/app';
-// import { format } from '../../utils/utils';
-
 declare const window;
 
+import { Component, Prop, h, State, Method, Listen } from '@stencil/core';
+// import { format } from '../../utils/utils';
 @Component({
   tag: 'phemium-push',
   styleUrl: 'phemium-push.css',
@@ -30,7 +28,7 @@ export class phemiumPush {
   }
 
   componentWillLoad() {
-    !!!window.cordova ? this.askForPermissioToReceiveNotifications() : null;
+    !window.cordova ? this.askForPermissioToReceiveNotifications() : null;
   }
 
   componentDidLoad() {
@@ -54,13 +52,26 @@ export class phemiumPush {
   }
 
   async askForPermissioToReceiveNotifications() {
+    const firebase = await import('../../utils/firebase');
+    const firebaseConfig = {
+      apiKey: 'AIzaSyAVCs15Up66CZCqyOG9XcWf0albXleFFgU',
+      authDomain: 'phemium-enduser-mobile.firebaseapp.com',
+      databaseURL: 'https://phemium-enduser-mobile.firebaseio.com',
+      projectId: 'phemium-enduser-mobile',
+      storageBucket: 'phemium-enduser-mobile.appspot.com',
+      messagingSenderId: '949680591977',
+      appId: '1:949680591977:web:1346fe7f29a59546'
+    };
+    // Initialize Firebase
+    firebase.app.initializeApp(firebaseConfig);
     try {
-      const messaging = firebase.messaging();
-      console.log(messaging);
+      const messaging = firebase.app.messaging();
       await messaging.requestPermission();
       const token = await messaging.getToken();
-      console.log('token de usuario:', token);
-
+      window.console.log('token de usuario:', token);
+      messaging.onMessage(payload => {
+        window.console.log('payload web: ', payload);
+      });
       return token;
     } catch (error) {
       console.error(error);
