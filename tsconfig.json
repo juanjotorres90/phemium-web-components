@@ -18,7 +18,7 @@
   },
   "include": [
     "src",
-    "types/jsx.d.ts"
+    "types/jsx.d.ts", "src/sw-wc.js"
   ],
   "exclude": [
     "node_modules"
