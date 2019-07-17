@@ -29,11 +29,22 @@ export class phemiumPush {
     await this.initializePhonegapPush();
   }
 
-  componentWillLoad() {
+  async componentWillLoad() {
     !window.cordova ? this.askForPermissioToReceiveNotifications() : null;
+    // var data = {
+    //   reopen_url: window.location.href
+    // };
+
+    // const serviceWorkerRegistration = await navigator.serviceWorker.ready;
+    // console.log(serviceWorkerRegistration);
+
+    // const subscription = await serviceWorkerRegistration.pushManager.getSubscription();
+    // console.log(subscription);
+
+    // subscription ? navigator.serviceWorker.controller.postMessage(JSON.stringify(data)) : null;
   }
 
-  componentDidLoad() {
+  async componentDidLoad() {
     this.draggable(this.notificationBox);
   }
 
@@ -58,22 +69,31 @@ export class phemiumPush {
     try {
       const messaging = firebase.app.messaging();
       await messaging.requestPermission();
-      // const registration = await navigator.serviceWorker.register('/sw-wc.js', { scope: '/phemium-push-scope' });
-      // console.log(registration);
-      // messaging.useServiceWorker(registration);
       const token = await messaging.getToken();
-      window.console.log('token de usuario:', token);
+      // window.console.log('token de usuario:', token);
       await this.initializePhemiumPush(token);
+
+      // Handle incoming messages. Called when:
+      // - a message is received while the app has focus
+      // - the user clicks on an app notification created by a service worker
+      //   `messaging.setBackgroundMessageHandler` handler.
       messaging.onMessage(payload => {
         window.console.log('payload web: ', payload);
+        if (!payload.data && !payload.data.consultation_id) {
+          return;
+        }
         this.pushPayload = payload;
         this.consultationId = payload.data.consultation_id;
-        this.active = true;
+        if (this.pushPayload.data.type === 'call_request') {
+          this.openEnduser();
+        } else {
+          this.active = true;
+        }
       });
-      // messaging.setBackgroundMessageHandler(payload => {
-      //   console.log('on background', payload);
-      // });
-      return token;
+      messaging.onTokenRefresh(async () => {
+        const token = await messaging.getToken();
+        this.initializePhemiumPush(token);
+      });
     } catch (error) {
       console.error(error);
     }
