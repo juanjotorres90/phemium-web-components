@@ -9,6 +9,25 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
+  interface PhemiumCard {
+    'API_ENDPOINT': string;
+    'buttonText': string;
+    'checkboxStyle': boolean;
+    'formElement': any;
+    'hasFiles': boolean;
+    'inputChecked': boolean;
+    'inputFileClass': string;
+    'inputFileHidden': boolean;
+    'language': string;
+    'maxFileSize': number;
+    'phemiumForm': any;
+    'showStaticText': boolean;
+    'showSubmitButton': boolean;
+    'soloText': boolean;
+    'toggleStyle': boolean;
+    'userId': number;
+    'userToken': string;
+  }
   interface PhemiumPush {
     'active': boolean;
     'appId': string;
@@ -23,17 +42,51 @@ export namespace Components {
 declare global {
 
 
+  interface HTMLPhemiumCardElement extends Components.PhemiumCard, HTMLStencilElement {}
+  var HTMLPhemiumCardElement: {
+    prototype: HTMLPhemiumCardElement;
+    new (): HTMLPhemiumCardElement;
+  };
+
   interface HTMLPhemiumPushElement extends Components.PhemiumPush, HTMLStencilElement {}
   var HTMLPhemiumPushElement: {
     prototype: HTMLPhemiumPushElement;
     new (): HTMLPhemiumPushElement;
   };
   interface HTMLElementTagNameMap {
+    'phemium-card': HTMLPhemiumCardElement;
     'phemium-push': HTMLPhemiumPushElement;
   }
 }
 
 declare namespace LocalJSX {
+  interface PhemiumCard extends JSXBase.HTMLAttributes<HTMLPhemiumCardElement> {
+    'API_ENDPOINT'?: string;
+    'buttonText'?: string;
+    'checkboxStyle'?: boolean;
+    'formElement'?: any;
+    'hasFiles'?: boolean;
+    'inputChecked'?: boolean;
+    'inputFileClass'?: string;
+    'inputFileHidden'?: boolean;
+    'language'?: string;
+    'maxFileSize'?: number;
+    'onAddFiles'?: (event: CustomEvent<any>) => void;
+    'onChangedCheckbox'?: (event: CustomEvent<any>) => void;
+    'onDeleteFiles'?: (event: CustomEvent<any>) => void;
+    'onExceedFileSize'?: (event: CustomEvent<any>) => void;
+    'onFilesUploaded'?: (event: CustomEvent<any>) => void;
+    'onFormCompleted'?: (event: CustomEvent<any>) => void;
+    'onShowInformation'?: (event: CustomEvent<any>) => void;
+    'onUploadingFiles'?: (event: CustomEvent<any>) => void;
+    'phemiumForm'?: any;
+    'showStaticText'?: boolean;
+    'showSubmitButton'?: boolean;
+    'soloText'?: boolean;
+    'toggleStyle'?: boolean;
+    'userId'?: number;
+    'userToken'?: string;
+  }
   interface PhemiumPush extends JSXBase.HTMLAttributes<HTMLPhemiumPushElement> {
     'active'?: boolean;
     'appId'?: string;
@@ -43,6 +96,7 @@ declare namespace LocalJSX {
   }
 
   interface IntrinsicElements {
+    'phemium-card': PhemiumCard;
     'phemium-push': PhemiumPush;
   }
 }
