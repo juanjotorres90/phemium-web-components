@@ -5,34 +5,27 @@ import { Component, Prop, Event, EventEmitter, State, h } from '@stencil/core';
   styleUrl: 'phemium-card.css'
 })
 export class PhemiumCard {
+  FIRST_FILE: number = 0;
+  cardInputTypes = {
+    TEXT: 1,
+    SELECT: 3,
+    FILE: 17,
+    SELECTION: 4
+  };
   formValues: any[] = [];
   file: any = {
     item: '',
     fieldId: 0
   };
   initForm: string;
-  FIRST_FILE: number = 0;
+  hasFiles = false;
 
-  @Prop() phemiumForm: any;
-  @Prop({ mutable: true }) formElement: any;
-
-  @Prop() API_ENDPOINT: string;
-  @Prop() buttonText: string;
-  @Prop({ mutable: true }) inputFileClass: string;
-  @State() fakeInputValue = 'Insertar archivo';
-  @Prop() userToken: string;
+  @Prop() card: any;
+  @Prop() config: any;
   @Prop() language: string;
-  @Prop() userId: number;
-  @Prop() maxFileSize: number;
+  @Prop() inputChecked: boolean;
 
-  @Prop() showSubmitButton: boolean = true;
-  @Prop({ mutable: true }) hasFiles: boolean = false;
-  @Prop() inputChecked: boolean = false;
-  @Prop() inputFileHidden: boolean = false;
-  @Prop() soloText: boolean = false;
-  @Prop() checkboxStyle: boolean = false;
-  @Prop() toggleStyle: boolean = false;
-  @Prop() showStaticText: boolean = false;
+  @State() fakeInputValue = 'Insertar archivo';
 
   @Event() formCompleted: EventEmitter;
   @Event() changedCheckbox: EventEmitter;
@@ -43,16 +36,13 @@ export class PhemiumCard {
   @Event() uploadingFiles: EventEmitter;
   @Event() filesUploaded: EventEmitter;
 
-  componentWillLoad() {}
-
   /**
    *  Resets inputs of type select and initialize array to return with phemium form values
    */
   componentWillUpdate() {
     // console.log(this.phemiumForm);
-    this.inputFileClass = this.inputFileHidden ? 'input-hidden' : 'input-visible';
-    this.phemiumForm && this.formValues.length == 0 && this.initForm != this.phemiumForm.external_id
-      ? (this.formValues = this.phemiumForm.fields.map(field => {
+    this.card && this.formValues.length == 0 && this.initForm != this.card.external_id
+      ? (this.formValues = this.card.fields.map(field => {
           if (field.library_field.type == 17) {
             return {
               library_field_id: field.library_field_id,
@@ -68,7 +58,7 @@ export class PhemiumCard {
       : null;
     const phemiumFormElement = document.getElementById('phemiumForm') as HTMLFormElement;
     const formElements = phemiumFormElement ? Array.from(phemiumFormElement.elements) : null;
-    if (formElements && this.initForm != this.phemiumForm.external_id) {
+    if (formElements && this.initForm != this.card.external_id) {
       formElements
         .filter((element: any) => {
           return element.type != 'submit';
@@ -77,7 +67,7 @@ export class PhemiumCard {
           input.value = input.type == 'select-one' ? '' : null;
         });
     }
-    this.initForm = this.phemiumForm.external_id;
+    this.initForm = this.card.external_id;
   }
 
   /**
@@ -125,9 +115,7 @@ export class PhemiumCard {
    * @param libraryFieldId Id of the modified field in the phemium form.
    */
   handleFileChange(event, libraryFieldId) {
-    console.log('entra a handle');
-
-    if (this.maxFileSize !== null && event.target.files[this.FIRST_FILE].size > this.maxFileSize) {
+    if (this.config.maxFileSize !== null && event.target.files[this.FIRST_FILE].size > this.config.maxFileSize) {
       this.exceedFileSize.emit();
     } else {
       const currentValue = event.target.files[this.FIRST_FILE].name;
@@ -148,28 +136,28 @@ export class PhemiumCard {
     const entity = 'cards';
     const method = 'update_field_values';
     let formData = new FormData();
-    formData.append('token', this.userToken);
+    formData.append('token', this.config.token);
     formData.append('entity', entity);
     formData.append('method', method);
-    if (!this.toggleStyle && !this.checkboxStyle) {
+    if (!this.config.toggleStyle && !this.config.checkboxStyle) {
       formData.append(
         'arguments',
-        `[{"enduser_id":${this.userId}},[{"library_field_id":${libraryFieldId},"options":[${event}]}],"es",${
-          this.phemiumForm.id
+        `[{"enduser_id":${this.config.userId}},[{"library_field_id":${libraryFieldId},"options":[${event}]}],"es",${
+          this.card.id
         },false]`
       );
     } else {
       formData.append(
         'arguments',
-        `[{"enduser_id":${this.userId}},[{"library_field_id":${libraryFieldId},"options":[${event.target.checked}]}],"es",${
-          this.phemiumForm.id
+        `[{"enduser_id":${this.config.userId}},[{"library_field_id":${libraryFieldId},"options":[${event.target.checked}]}],"es",${
+          this.card.id
         },false]`
       );
     }
 
     let response: void | Promise<any>;
     try {
-      const res = await fetch(this.API_ENDPOINT, {
+      const res = await fetch(this.config.apiEndpoint, {
         method: 'POST',
         body: formData
       });
@@ -177,7 +165,7 @@ export class PhemiumCard {
     } catch (error) {
       response = console.error('Error:', error);
     }
-    if (!this.toggleStyle && !this.checkboxStyle) {
+    if (!this.config.toggleStyle && !this.config.checkboxStyle) {
       this.changedCheckbox.emit(event);
     } else {
       this.changedCheckbox.emit(event.target.checked);
@@ -195,7 +183,7 @@ export class PhemiumCard {
     const entity = 'resources';
     const method = 'upload_resource';
     let formData = new FormData();
-    formData.append('token', this.userToken);
+    formData.append('token', this.config.token);
     formData.append('entity', entity);
     formData.append('method', method);
     formData.append('arguments', `["${file.name}"]`);
@@ -203,7 +191,7 @@ export class PhemiumCard {
 
     let response: void | Promise<any>;
     try {
-      const res = await fetch(this.API_ENDPOINT, {
+      const res = await fetch(this.config.apiEndpoint, {
         method: 'POST',
         body: formData
       });
@@ -252,14 +240,25 @@ export class PhemiumCard {
     });
     return staticText.value;
   }
+  /**
+   *
+   * @param field Object of the field in phemium form.
+   * Function that takes the static text from a field in the current language.
+   */
+  inputFile(field) {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.click();
+    input.onchange = () => this.handleFileChange(event, field);
+  }
 
   render() {
-    if (this.phemiumForm) {
+    if (this.card) {
       return [
         <form id='phemiumForm' class='main-form' onSubmit={event => this.handleSubmit(event)}>
-          {this.phemiumForm.fields.map(field => {
+          {this.card.fields.map(field => {
             const fieldName = this.getFieldName(field, 'es');
-            if (field.library_field.type == 1) {
+            if (field.library_field.type == this.cardInputTypes.TEXT) {
               return (
                 <input
                   class='form-field'
@@ -268,7 +267,7 @@ export class PhemiumCard {
                   onInput={event => this.handleInputChange(event, field.library_field_id)}
                 />
               );
-            } else if (field.library_field.type == 3) {
+            } else if (field.library_field.type == this.cardInputTypes.SELECT) {
               return [
                 <select class='form-field' onInput={event => this.handleInputChange(event, field.library_field_id)}>
                   <option value='' disabled selected hidden>
@@ -287,23 +286,21 @@ export class PhemiumCard {
                   })}
                 </select>
               ];
-            } else if (field.library_field.type == 17) {
+            } else if (field.library_field.type == this.cardInputTypes.FILE) {
               return (
-                <div class='fake-inut-file-container'>
-                  <input id='fakeInputFile' class='form-field file-field' value={this.fakeInputValue} />
-                  <input
-                    id='mainInputFile'
-                    type='file'
-                    class={`${this.inputFileClass} form-field`}
-                    onChange={event => this.handleFileChange(event, field.library_field_id)}
-                  />
-                  <slot name='file-end' />
-                  {this.hasFiles ? <div class='fake-button' onClick={() => this.handleFileButton()} /> : null}
+                <div
+                  class='fake-inut-file-container'
+                  onClick={() => {
+                    this.inputFile(field.library_field_id);
+                  }}
+                >
+                  <input id='fakeInputFile' class='form-field file-field' value={this.fakeInputValue} disabled />
+                  {/* {this.hasFiles ? <div class='fake-button' onClick={() => this.handleFileButton()} /> : null} */}
                 </div>
               );
-            } else if (field.library_field.type == 4) {
+            } else if (field.library_field.type == this.cardInputTypes.SELECTION) {
               //13
-              if (this.toggleStyle) {
+              if (this.config.toggleStyle) {
                 return (
                   <div class='notifications-checkbox-container'>
                     <span class='notifications-text'>{fieldName}</span>
@@ -317,7 +314,7 @@ export class PhemiumCard {
                     </label>
                   </div>
                 );
-              } else if (this.checkboxStyle) {
+              } else if (this.config.checkboxStyle) {
                 return (
                   <div class='terms-checkbox-container'>
                     <input
@@ -338,7 +335,8 @@ export class PhemiumCard {
                   </div>
                 );
               } else {
-                if (!this.soloText) {
+                console.log(this.config.soloText);
+                if (!this.config.soloText) {
                   return (
                     <div class='list-buttons-container'>
                       <button
@@ -359,11 +357,11 @@ export class PhemiumCard {
                   );
                 }
               }
-            } else if (field.library_field.type == 12 && this.showStaticText) {
+            } else if (field.library_field.type == 12 && this.config.showStaticText) {
               return <div class='static-text-container' innerHTML={this.getStaticText(field)} />;
             }
           })}
-          {this.showSubmitButton ? <input class='form-submit' type='submit' value={this.buttonText} /> : null}
+          {!this.config.hideSubmitButton ? <input class='form-submit' type='submit' value={this.config.buttonText} /> : null}
         </form>
       ];
     } else {

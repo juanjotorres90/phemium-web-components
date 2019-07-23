@@ -10,23 +10,10 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 export namespace Components {
   interface PhemiumCard {
-    'API_ENDPOINT': string;
-    'buttonText': string;
-    'checkboxStyle': boolean;
-    'formElement': any;
-    'hasFiles': boolean;
+    'card': any;
+    'config': any;
     'inputChecked': boolean;
-    'inputFileClass': string;
-    'inputFileHidden': boolean;
     'language': string;
-    'maxFileSize': number;
-    'phemiumForm': any;
-    'showStaticText': boolean;
-    'showSubmitButton': boolean;
-    'soloText': boolean;
-    'toggleStyle': boolean;
-    'userId': number;
-    'userToken': string;
   }
   interface PhemiumPush {
     'active': boolean;
@@ -61,16 +48,10 @@ declare global {
 
 declare namespace LocalJSX {
   interface PhemiumCard extends JSXBase.HTMLAttributes<HTMLPhemiumCardElement> {
-    'API_ENDPOINT'?: string;
-    'buttonText'?: string;
-    'checkboxStyle'?: boolean;
-    'formElement'?: any;
-    'hasFiles'?: boolean;
+    'card'?: any;
+    'config'?: any;
     'inputChecked'?: boolean;
-    'inputFileClass'?: string;
-    'inputFileHidden'?: boolean;
     'language'?: string;
-    'maxFileSize'?: number;
     'onAddFiles'?: (event: CustomEvent<any>) => void;
     'onChangedCheckbox'?: (event: CustomEvent<any>) => void;
     'onDeleteFiles'?: (event: CustomEvent<any>) => void;
@@ -79,13 +60,6 @@ declare namespace LocalJSX {
     'onFormCompleted'?: (event: CustomEvent<any>) => void;
     'onShowInformation'?: (event: CustomEvent<any>) => void;
     'onUploadingFiles'?: (event: CustomEvent<any>) => void;
-    'phemiumForm'?: any;
-    'showStaticText'?: boolean;
-    'showSubmitButton'?: boolean;
-    'soloText'?: boolean;
-    'toggleStyle'?: boolean;
-    'userId'?: number;
-    'userToken'?: string;
   }
   interface PhemiumPush extends JSXBase.HTMLAttributes<HTMLPhemiumPushElement> {
     'active'?: boolean;
