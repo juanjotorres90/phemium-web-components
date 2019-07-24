@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2019-??-??
+
+### Added
+
+- Add tailwind to handle easy css properties.
+- Add css properties to allow users of this component customize it.
+
+### Changed
+
+- Update stencil core version to 1.1.4. Before this release it was still on beta versions.
+- Clean properties used on the component. Instead of having several properties now it receives a single configuration property to handle initialization of the card.
+- Change how input file is used. Before this release we had 2 inputs (hidding real input file and showing fake input text) to allow users to see this input customized, not and input type file by default.
+- Change full README.md. Now it has explains correctly how to install and use the component and it's parts.
+
 ## [0.0.1] - 2019-01-11
 
 ### Added
@@ -19,6 +33,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Updating in phemium results of checkbox input automatically when users checks it.
 
 ### Fixed
-- Fixed error that was reseting form in case we selected a new file.
-- Fixed error while uploading files. Now phemium-card is sending correctly data to phemium.
-- Changed z-index for input type file to fix future style problems.
+
+- Fix error that was reseting form in case we selected a new file.
+- Fix error while uploading files. Now phemium-card is sending correctly data to phemium.
+- Change z-index for input type file to fix future style problems.

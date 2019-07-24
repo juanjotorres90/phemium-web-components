@@ -1,24 +1,26 @@
+# New BugFix MR
+
 ## What does this MR do?
 
-<!-- Briefly describe what this MR is about -->
+- Description
 
 ## Related issues
 
-<!-- Mention the issue(s) this MR closes or is related to -->
 - [#XXXXX](https://cpmo.grupocostaisa.com/issues/XXXXX)
-
 
 ## Author's checklist
 
 - [ ] Apply the correct labels. Remember to include customer label if applies.
 - [ ] Add related screenshots (before/after) if applies.
 - [ ] Add the corresponding CHANGELOG entry.
-
+- [ ] Check this is a conflict-free MR.
 
 ## Review checklist
 
-- [ ] Your team's review
+- [ ] First Team Member (required)
+- [ ] Second Team Member
 - [ ] PM's review (required)
 
+Thanks for your MR, you're awesome :+1:
 
 /label ~Bug
