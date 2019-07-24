@@ -1,7 +1,7 @@
 {
   "name": "phemium-web-components",
-  "version": "0.0.1",
-  "description": "Stencil Component Starter",
+  "version": "1.0.0",
+  "description": "Phemium Web Components Library build with Stencil One",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "es2015": "dist/esm/index.mjs",
