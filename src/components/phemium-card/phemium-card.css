@@ -1,65 +1,31 @@
-/* :host {
-  text-align: center;
-  font-size: 1em;
-  --form-line-height: 50px;
-  --field-width: 80%;
-  --field-height: 20px;
-  --field-border-width: 1px 1px 1px 1px;
-  --field-border-color: black;
-  --field-border-style: solid;
-  --submit-button-width: 80%;
-  --input-file-opacity: 0;
-  --input-file-span-left: 0;
-} */
-
-phemium-card .main-form {
-  /* line-height: 50px; */
+:host {
+  --color-primary: #86bd17;
+  --color-secondary: #cccccc;
+  --max-field-width: 45%;
+  --field-file-button-color: black;
+  --field-file-button-padding: 0.35rem;
+  --field-height: 2rem;
+  --field-border-top: none;
+  --field-border-right: none;
+  --field-border-bottom: 1px solid var(--color-primary);
+  --field-border-left: none;
+  --submit-button-width: 15rem;
+  --submit-button-height: 2rem;
+  --submit-button-background: var(--color-primary);
+  --submit-button-text-color: white;
+  --submit-button-radius: 7px;
+  --submit-button-position: fixed;
+  --submit-button-top: unset;
+  --submit-button-right: unset;
+  --submit-button-bottom: 2rem;
+  --submit-button-left: unset;
+  --refuse-button-background: var(--color-secondary);
+  --refuse-button-text-color: black;
+  --accept-button-background: var(--color-primary);
+  --accept-button-text-color: white;
+  --field-text-placeholder-color: black;
+  --field-text-placeholder-font-weight: 400;
 }
-
-phemium-card .form-field {
-  width: 80%;
-  height: 20px;
-  border-width: 1px;
-  border-color: black;
-  border-style: solid;
-}
-
-phemium-card .file-field {
-  display: inline-flex;
-  position: relative;
-  align-items: center;
-  z-index: 1;
-}
-
-phemium-card .input-hidden {
-  z-index: 2;
-  opacity: 0;
-  width: 100% !important;
-  position: absolute;
-  left: 0;
-}
-
-phemium-card .form-submit {
-  width: 80%;
-}
-
-phemium-card .fake-inut-file-container {
-  position: relative;
-}
-
-/* phemium-card span {
-  position: absolute;
-  left: 0;
-} */
-
-/* phemium-card ::slotted([slot="file-end"]) {
-  float: right;
-}
-
-phemium-card ::slotted([slot="file-start"]) {
-  position: absolute;
-  left: 0;
-} */
 
 /* The switch - the box around the slider */
 
@@ -104,15 +70,11 @@ phemium-card ::slotted([slot="file-start"]) {
   transition: 0.4s;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: #2196f3;
 }
 
-/* input:focus + .slider {
-  box-shadow: 0 0 1px #2196f3;
-} */
-
-input:checked + .slider:before {
+input:checked+.slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
@@ -128,34 +90,107 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
-.notifications-checkbox-container {
-  display: inline-flex;
+/*End slider*/
+
+.double-column {
+  display: flex;
+  flex-direction: row;
+  flex-flow: row wrap;
+  justify-content: space-between;
+}
+
+.single-column {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.card-field {
   width: 100%;
-  height: 45px;
+  max-width: var(--max-field-width);
+  height: var(--field-height);
+  border-top: var(--field-border-top);
+  border-right: var(--field-border-right);
+  border-bottom: var(--field-border-bottom);
+  border-left: var(--field-border-left);
+  outline: none;
 }
 
-.notifications-text {
-  font-size: 2em;
-  position: absolute;
-  left: 10%;
+.double-column input[type="text"].card-field {
+  width: 100%;
+  max-width: 100%;
 }
 
-.notifications-toggle {
-  position: absolute;
-  right: 10%;
+select.card-field {
+  -webkit-appearance: none;
+  background-repeat: no-repeat !important;
+  background-position: right !important;
+  background-position-y: 85% !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 width%3D%2224%22 height%3D%2224%22 viewBox%3D%220 0 24 24%22%3E%3Cpath d%3D%22M16.59 8.59L12 13.17 7.41 8.59 6 10l6 6 6-6z%22%2F%3E%3Cpath d%3D%22M0 0h24v24H0z%22 fill%3D%22none%22%2F%3E%3C%2Fsvg%3E");
 }
 
-.terms-checkbox-container {
+.field-file-button {
+  fill: var(--field-file-button-color);
+  padding: var(--field-file-button-padding);
 }
 
-.terms-text {
+.submit-button {
+  width: var(--submit-button-width);
+  height: var(--submit-button-height);
+  background: var(--submit-button-background);
+  color: var(--submit-button-text-color);
+  border-radius: var(--submit-button-radius);
+  position: var(--submit-button-position);
+  top: var(--submit-button-top);
+  right: var(--submit-button-right);
+  bottom: var(--submit-button-bottom);
+  left: var(--submit-button-left);
 }
 
-.accept-buttons-container {
-}
 .refuse-button {
+  width: var(--submit-button-width);
+  height: var(--submit-button-height);
+  background: var(--refuse-button-background);
+  color: var(--refuse-button-text-color);
+  border-radius: var(--submit-button-radius);
+  /* position: var(--submit-button-position);
+  top: var(--submit-button-top);
+  right: var(--submit-button-right);
+  bottom: var(--submit-button-bottom);
+  left: var(--submit-button-left); */
 }
+
 .accept-button {
+  width: var(--submit-button-width);
+  height: var(--submit-button-height);
+  background: var(--accept-button-background);
+  color: var(--accept-button-text-color);
+  border-radius: var(--submit-button-radius);
+  /* position: var(--submit-button-position);
+  top: var(--submit-button-top);
+  right: var(--submit-button-right);
+  bottom: var(--submit-button-bottom);
+  left: var(--submit-button-left); */
+}
+
+.card-field::-moz-placeholder {
+  color: var(--field-text-placeholder-color);
+  font-weight: var(--field-text-placeholder-font-weight);
+  opacity: 1 !important;
+}
+
+.card-field::-webkit-input-placeholder {
+  color: var(--field-text-placeholder-color);
+  font-weight: var(--field-text-placeholder-font-weight);
+  opacity: 1 !important;
+}
+
+.delete-position {
+  transform: rotate(45deg);
+  transition: transform 0.5s ease-in-out;
+}
+
+.inner-button {
+  color: var(--color-primary);
 }

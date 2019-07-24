@@ -5,69 +5,18 @@
  */
 
 
-import '@stencil/core';
-
-
+import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 
 
 export namespace Components {
-
   interface PhemiumCard {
-    'API_ENDPOINT': string;
-    'buttonText': string;
-    'checkboxStyle': boolean;
-    'formElement': any;
-    'hasFiles': boolean;
-    'inputChecked': boolean;
-    'inputFileClass': string;
-    'inputFileHidden': boolean;
+    'card': any;
+    'config': { apiEndpoint: string; token: string; userId: number; hideSubmitButton: boolean; selectionStyle: string; showStaticText: boolean; soloText: boolean; submitButtonText: string; maxFileSize: any; formStyle: string; inputChecked: boolean; };
     'language': string;
-    'maxFileSize': number;
-    'phemiumForm': any;
-    'showStaticText': boolean;
-    'showSubmitButton': boolean;
-    'soloText': boolean;
-    'toggleStyle': boolean;
-    'userId': number;
-    'userToken': string;
-  }
-  interface PhemiumCardAttributes extends StencilHTMLAttributes {
-    'API_ENDPOINT'?: string;
-    'buttonText'?: string;
-    'checkboxStyle'?: boolean;
-    'formElement'?: any;
-    'hasFiles'?: boolean;
-    'inputChecked'?: boolean;
-    'inputFileClass'?: string;
-    'inputFileHidden'?: boolean;
-    'language'?: string;
-    'maxFileSize'?: number;
-    'onAddFiles'?: (event: CustomEvent) => void;
-    'onChangedCheckbox'?: (event: CustomEvent) => void;
-    'onDeleteFiles'?: (event: CustomEvent) => void;
-    'onExceedFileSize'?: (event: CustomEvent) => void;
-    'onFilesUploaded'?: (event: CustomEvent) => void;
-    'onFormCompleted'?: (event: CustomEvent) => void;
-    'onShowInformation'?: (event: CustomEvent) => void;
-    'onUploadingFiles'?: (event: CustomEvent) => void;
-    'phemiumForm'?: any;
-    'showStaticText'?: boolean;
-    'showSubmitButton'?: boolean;
-    'soloText'?: boolean;
-    'toggleStyle'?: boolean;
-    'userId'?: number;
-    'userToken'?: string;
   }
 }
 
 declare global {
-  interface StencilElementInterfaces {
-    'PhemiumCard': Components.PhemiumCard;
-  }
-
-  interface StencilIntrinsicElements {
-    'phemium-card': Components.PhemiumCardAttributes;
-  }
 
 
   interface HTMLPhemiumCardElement extends Components.PhemiumCard, HTMLStencilElement {}
@@ -75,22 +24,36 @@ declare global {
     prototype: HTMLPhemiumCardElement;
     new (): HTMLPhemiumCardElement;
   };
-
   interface HTMLElementTagNameMap {
-    'phemium-card': HTMLPhemiumCardElement
-  }
-
-  interface ElementTagNameMap {
     'phemium-card': HTMLPhemiumCardElement;
   }
-
-
-  export namespace JSX {
-    export interface Element {}
-    export interface IntrinsicElements extends StencilIntrinsicElements {
-      [tagName: string]: any;
-    }
-  }
-  export interface HTMLAttributes extends StencilHTMLAttributes {}
-
 }
+
+declare namespace LocalJSX {
+  interface PhemiumCard extends JSXBase.HTMLAttributes<HTMLPhemiumCardElement> {
+    'card'?: any;
+    'config'?: { apiEndpoint: string; token: string; userId: number; hideSubmitButton: boolean; selectionStyle: string; showStaticText: boolean; soloText: boolean; submitButtonText: string; maxFileSize: any; formStyle: string; inputChecked: boolean; };
+    'language'?: string;
+    'onChangedCheckbox'?: (event: CustomEvent<any>) => void;
+    'onExceedFileSize'?: (event: CustomEvent<any>) => void;
+    'onFilesUploaded'?: (event: CustomEvent<any>) => void;
+    'onFormCompleted'?: (event: CustomEvent<any>) => void;
+    'onShowInformation'?: (event: CustomEvent<any>) => void;
+    'onUploadingFiles'?: (event: CustomEvent<any>) => void;
+  }
+
+  interface IntrinsicElements {
+    'phemium-card': PhemiumCard;
+  }
+}
+
+export { LocalJSX as JSX };
+
+
+declare module "@stencil/core" {
+  export namespace JSX {
+    interface IntrinsicElements extends LocalJSX.IntrinsicElements {}
+  }
+}
+
+
