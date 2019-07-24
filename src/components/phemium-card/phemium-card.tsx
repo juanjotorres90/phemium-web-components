@@ -22,6 +22,7 @@ export class PhemiumCard {
   hasFiles = false;
 
   @Prop() card: any;
+  @Prop() language = 'es';
   @Prop() config = {
     apiEndpoint: '',
     token: '',
@@ -35,8 +36,6 @@ export class PhemiumCard {
     formStyle: 'single-column',
     inputChecked: false
   };
-  @Prop() language = 'es';
-  // @Prop() inputChecked: boolean;
 
   @State() fakeInputValue = 'Insertar archivo';
 
