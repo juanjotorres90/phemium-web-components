@@ -1,27 +1,130 @@
-![Built With Stencil](https://img.shields.io/badge/-Built%20With%20Stencil-16161d.svg?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE5LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHZpZXdCb3g9IjAgMCA1MTIgNTEyIiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCA1MTIgNTEyOyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI%2BCjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI%2BCgkuc3Qwe2ZpbGw6I0ZGRkZGRjt9Cjwvc3R5bGU%2BCjxwYXRoIGNsYXNzPSJzdDAiIGQ9Ik00MjQuNywzNzMuOWMwLDM3LjYtNTUuMSw2OC42LTkyLjcsNjguNkgxODAuNGMtMzcuOSwwLTkyLjctMzAuNy05Mi43LTY4LjZ2LTMuNmgzMzYuOVYzNzMuOXoiLz4KPHBhdGggY2xhc3M9InN0MCIgZD0iTTQyNC43LDI5Mi4xSDE4MC40Yy0zNy42LDAtOTIuNy0zMS05Mi43LTY4LjZ2LTMuNkgzMzJjMzcuNiwwLDkyLjcsMzEsOTIuNyw2OC42VjI5Mi4xeiIvPgo8cGF0aCBjbGFzcz0ic3QwIiBkPSJNNDI0LjcsMTQxLjdIODcuN3YtMy42YzAtMzcuNiw1NC44LTY4LjYsOTIuNy02OC42SDMzMmMzNy45LDAsOTIuNywzMC43LDkyLjcsNjguNlYxNDEuN3oiLz4KPC9zdmc%2BCg%3D%3D&colorA=16161d&style=flat-square)
+# Phemium Card Web Component
 
-# Stencil Component Starter
-
-This is a starter project for building a standalone Web Component using Stencil.
-
-Stencil is also great for building entire apps. For that, use the [stencil-app-starter](https://github.com/ionic-team/stencil-app-starter) instead.
-
-# Stencil
-
-Stencil is a compiler for building fast web apps using Web Components.
-
-Stencil combines the best concepts of the most popular frontend frameworks into a compile-time rather than run-time tool.  Stencil takes TypeScript, JSX, a tiny virtual DOM layer, efficient one-way data binding, an asynchronous rendering pipeline (similar to React Fiber), and lazy-loading out of the box, and generates 100% standards-based Web Components that run in any browser supporting the Custom Elements v1 spec.
-
-Stencil components are just Web Components, so they work in any major framework or with no framework at all.
-
-## Getting Started
-
-To start building a new web component using Stencil, clone this repo to a new directory:
+<!-- ## Installation
 
 ```bash
-git clone https://github.com/ionic-team/stencil-component-starter.git my-component
-cd my-component
-git remote rm origin
+ npm i phemium-card
+``` -->
+
+## Usage
+
+In your HTML files:
+
+```
+ <phemium-card config="configObject"></phemium-card>
+```
+
+This is how your configuration object should look. Change values to whatever you need.
+
+```
+     this.configObject = {
+      apiEndpoint: 'API_ENDPOINT',
+      token: 'xxxxxxxx',
+      userId: 12,
+      hideSubmitButton: true,
+      selectionStyle: 'checkbox',
+      showStaticText: false,
+      soloText: false,
+      submitButtonText: 'Siguiente',
+      maxFileSize: 120000,
+      formStyle: 'single-column',
+      inputChecked: true
+    };
+```
+
+<!-- ### Javascript or AngularJS (1.x)
+
+```
+<script src="https://unpkg.com/phemium@latest/dist/phemium-web-components.js"></script>
+``` -->
+
+### Angular 2+
+
+Somewhere in your project (e.g. `main.ts`):
+
+```
+import { defineCustomElements as phemiumLoader } from 'phemium-web-components/loader';
+phemiumLoader(window);
+
+```
+
+### React
+
+On your index.js:
+
+```
+import { defineCustomElements as phemiumLoader } from 'phemium-web-components/loader';
+phemiumLoader(window);
+```
+
+### Vue
+
+```
+import { defineCustomElements as phemiumLoader } from 'phemium-web-components/loader';
+Vue.config.ignoredElements = [/test-\w*/];
+phemiumLoader(window);
+```
+
+## Properties
+
+|  Property  | Default |                                  Description                                   |
+| :--------: | :-----: | :----------------------------------------------------------------------------: |
+|   `card`   |         |                             `Phemium card object.`                             |
+|  `config`  | `false` | `Configuration object to initialize the component. Details on the next table.` |
+| `language` |  `es`   |                      `Language to display texts on card.`                      |
+
+## config property
+
+|      Property      |   Type    |         Possible values         |     Default     |                Description                |
+| :----------------: | :-------: | :-----------------------------: | :-------------: | :---------------------------------------: |
+|   `apiEndpoint`    | `string`  |                                 |                 | API Endpoint to handle phemium petitions. |
+|      `token`       | `string`  |                                 |                 |      Token needed for api requests.       |
+|      `userId`      | `number`  |                                 |                 |     User id needed for api requests.      |
+| `hideSubmitButton` | `boolean` |         `true | false`          |     `false`     |            Hide submit button.            |
+|  `selectionStyle`  | `string`  |       `checkbox | toggle`       |   `checkbox`    |    Style to display selection inputs.     |
+|  `showStaticText`  | `boolean` |         `true | false`          |     `true`      |   Show static text associated to field.   |
+|     `soloText`     | `boolean` |         `true | false`          |     `false`     |    Show only the static text on field.    |
+| `submitButtonText` | `boolean` |         `true | false`          |   `Continuar`   |        Text for the submit button.        |
+|   `maxFileSize`    | `number`  |                                 |      null       |        Maximum file size allowed.         |
+|    `formStyle`     | `string`  | `single-column | double-column` | `single-column` |            Style of the form.             |
+|   `inputChecked`   | `boolean` |         `true | false`          |     `false`     |       Initial input checkbox value.       |
+
+## Customize CSS
+
+|                Property                |             Default              |
+| :------------------------------------: | :------------------------------: |
+|           `--color-primary`            |            `#86bd17`             |
+|          `--color-secondary`           |            `#cccccc;`            |
+|          `--max-field-width`           |              `45%`               |
+|      `--field-file-button-color`       |             `black`              |
+|     `--field-file-button-padding`      |            `0.35rem`             |
+|            `--field-height`            |              `2rem`              |
+|          `--field-border-top`          |              `none`              |
+|         `--field-border-right`         |              `none`              |
+|        `--field-border-bottom`         | `1px solid var(--color-primary)` |
+|         `--field-border-left`          |              `none`              |
+|        `--submit-button-width`         |             `15rem`              |
+|        `--submit-button-height`        |              `2rem`              |
+|      `--submit-button-background`      |      `var(--color-primary)`      |
+|      `--submit-button-text-color`      |             `white`              |
+|        `--submit-button-radius`        |              `7px`               |
+|       `--submit-button-position`       |             `fixed`              |
+|         `--submit-button-top`          |             `unset`              |
+|        `--submit-button-right`         |             `unset`              |
+|        `--submit-button-bottom`        |              `2rem`              |
+|         `--submit-button-left`         |             `unset`              |
+|      `--refuse-button-background`      |     `var(--color-secondary)`     |
+|      `--refuse-button-text-color`      |             `black`              |
+|      `--accept-button-background`      |     `var(--color-secondary)`     |
+|      `--accept-button-text-color`      |             `white`              |
+|    `--field-text-placeholder-color`    |             `black`              |
+| `--field-text-placeholder-font-weight` |              `400`               |
+
+## Contribute
+
+```bash
+git clone https://gitlab.phemium.com/phemium/phemium-web-components
+cd phemium-web-components
 ```
 
 and run:
@@ -36,37 +139,3 @@ To build the component for production, run:
 ```bash
 npm run build
 ```
-
-To run the unit tests for the components, run:
-
-```bash
-npm test
-```
-
-Need help? Check out our docs [here](https://stenciljs.com/docs/my-first-component).
-
-
-## Naming Components
-
-When creating new component tags, we recommend _not_ using `stencil` in the component name (ex: `<stencil-datepicker>`). This is because the generated component has little to nothing to do with Stencil; it's just a web component!
-
-Instead, use a prefix that fits your company or any name for a group of related components. For example, all of the Ionic generated web components use the prefix `ion`.
-
-
-## Using this component
-
-### Script tag
-
-- [Publish to NPM](https://docs.npmjs.com/getting-started/publishing-npm-packages)
-- Put a script tag similar to this `<script src='https://unpkg.com/my-component@0.0.1/dist/mycomponent.js'></script>` in the head of your index.html
-- Then you can use the element anywhere in your template, JSX, html etc
-
-### Node Modules
-- Run `npm install my-component --save`
-- Put a script tag similar to this `<script src='node_modules/my-component/dist/mycomponent.js'></script>` in the head of your index.html
-- Then you can use the element anywhere in your template, JSX, html etc
-
-### In a stencil-starter app
-- Run `npm install my-component --save`
-- Add an import to the npm packages `import my-component;`
-- Then you can use the element anywhere in your template, JSX, html etc

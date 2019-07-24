@@ -11,18 +11,8 @@ import { HTMLStencilElement, JSXBase } from '@stencil/core/internal';
 export namespace Components {
   interface PhemiumCard {
     'card': any;
-    'config': any;
-    'inputChecked': boolean;
+    'config': { apiEndpoint: string; token: string; userId: number; hideSubmitButton: boolean; selectionStyle: string; showStaticText: boolean; soloText: boolean; submitButtonText: string; maxFileSize: any; formStyle: string; inputChecked: boolean; };
     'language': string;
-  }
-  interface PhemiumPush {
-    'active': boolean;
-    'appId': string;
-    'firebaseConfig': any;
-    'initialize': () => Promise<void>;
-    'phemiumConfig': any;
-    'showPushInstances': () => Promise<void>;
-    'token': string;
   }
 }
 
@@ -34,44 +24,26 @@ declare global {
     prototype: HTMLPhemiumCardElement;
     new (): HTMLPhemiumCardElement;
   };
-
-  interface HTMLPhemiumPushElement extends Components.PhemiumPush, HTMLStencilElement {}
-  var HTMLPhemiumPushElement: {
-    prototype: HTMLPhemiumPushElement;
-    new (): HTMLPhemiumPushElement;
-  };
   interface HTMLElementTagNameMap {
     'phemium-card': HTMLPhemiumCardElement;
-    'phemium-push': HTMLPhemiumPushElement;
   }
 }
 
 declare namespace LocalJSX {
   interface PhemiumCard extends JSXBase.HTMLAttributes<HTMLPhemiumCardElement> {
     'card'?: any;
-    'config'?: any;
-    'inputChecked'?: boolean;
+    'config'?: { apiEndpoint: string; token: string; userId: number; hideSubmitButton: boolean; selectionStyle: string; showStaticText: boolean; soloText: boolean; submitButtonText: string; maxFileSize: any; formStyle: string; inputChecked: boolean; };
     'language'?: string;
-    'onAddFiles'?: (event: CustomEvent<any>) => void;
     'onChangedCheckbox'?: (event: CustomEvent<any>) => void;
-    'onDeleteFiles'?: (event: CustomEvent<any>) => void;
     'onExceedFileSize'?: (event: CustomEvent<any>) => void;
     'onFilesUploaded'?: (event: CustomEvent<any>) => void;
     'onFormCompleted'?: (event: CustomEvent<any>) => void;
     'onShowInformation'?: (event: CustomEvent<any>) => void;
     'onUploadingFiles'?: (event: CustomEvent<any>) => void;
   }
-  interface PhemiumPush extends JSXBase.HTMLAttributes<HTMLPhemiumPushElement> {
-    'active'?: boolean;
-    'appId'?: string;
-    'firebaseConfig'?: any;
-    'phemiumConfig'?: any;
-    'token'?: string;
-  }
 
   interface IntrinsicElements {
     'phemium-card': PhemiumCard;
-    'phemium-push': PhemiumPush;
   }
 }
 
