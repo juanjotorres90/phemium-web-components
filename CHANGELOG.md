@@ -9,15 +9,15 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Added
 
-- Added tailwind to handle easy css properties.
-- Added css properties to allow users of this component customize it.
+- Add tailwind to handle easy css properties.
+- Add css properties to allow users of this component customize it.
 
 ### Changed
 
 - Update stencil core version to 1.1.4. Before this release it was still on beta versions.
-- Cleaned properties used on the component. Instead of having several properties now it receives a single configuration property to handle initialization of the card.
-- Changed how input file is used. Before this release we had 2 inputs (hidding real input file and showing fake input text) to allow users to see this input customized, not and input type file by default.
-- Changed full readme. Now it has explains correctly how to install and use the component and it's parts.
+- Clean properties used on the component. Instead of having several properties now it receives a single configuration property to handle initialization of the card.
+- Change how input file is used. Before this release we had 2 inputs (hidding real input file and showing fake input text) to allow users to see this input customized, not and input type file by default.
+- Change full README.md. Now it has explains correctly how to install and use the component and it's parts.
 
 ## [0.0.1] - 2019-01-11
 
@@ -34,6 +34,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ### Fixed
 
-- Fixed error that was reseting form in case we selected a new file.
-- Fixed error while uploading files. Now phemium-card is sending correctly data to phemium.
-- Changed z-index for input type file to fix future style problems.
+- Fix error that was reseting form in case we selected a new file.
+- Fix error while uploading files. Now phemium-card is sending correctly data to phemium.
+- Change z-index for input type file to fix future style problems.
