@@ -43,7 +43,7 @@ This is how your configuration object should look. Change values to whatever you
 Somewhere in your project (e.g. `main.ts`):
 
 ```
-import { defineCustomElements as phemiumLoader } from 'phemium-web-components/loader';
+import { defineCustomElements as phemiumLoader } from '@phemium-costaisa/phemium-web-components/loader';
 phemiumLoader(window);
 
 ```
@@ -53,14 +53,14 @@ phemiumLoader(window);
 On your index.js:
 
 ```
-import { defineCustomElements as phemiumLoader } from 'phemium-web-components/loader';
+import { defineCustomElements as phemiumLoader } from '@phemium-costaisa/phemium-web-components/loader';
 phemiumLoader(window);
 ```
 
 ### Vue
 
 ```
-import { defineCustomElements as phemiumLoader } from 'phemium-web-components/loader';
+import { defineCustomElements as phemiumLoader } from '@phemium-costaisa/phemium-web-components/loader';
 Vue.config.ignoredElements = [/test-\w*/];
 phemiumLoader(window);
 ```
