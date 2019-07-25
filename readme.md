@@ -11,7 +11,7 @@
 In your HTML files:
 
 ```
- <phemium-card config="configObject"></phemium-card>
+ <phemium-card card="cardObject" config="configObject"></phemium-card>
 ```
 
 This is how your configuration object should look. Change values to whatever you need.
