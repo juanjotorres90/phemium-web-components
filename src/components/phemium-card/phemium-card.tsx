@@ -263,7 +263,7 @@ export class PhemiumCard {
   render() {
     if (this.card) {
       return [
-        <form id='phemiumForm' class={this.config.formStyle} onSubmit={event => this.handleSubmit(event)}>
+        <form id='phemiumForm' class={`w-full ${this.config.formStyle}`} onSubmit={event => this.handleSubmit(event)}>
           {this.card.fields.map(field => {
             const fieldName = this.getFieldName(field, 'es');
             if (field.library_field.type == this.cardInputTypes.TEXT) {
