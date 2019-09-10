@@ -103,6 +103,8 @@ phemiumLoader(window);
 |         `--field-border-right`         |              `none`              |
 |        `--field-border-bottom`         | `1px solid var(--color-primary)` |
 |         `--field-border-left`          |              `none`              |
+|            `--field-margin`            |           `0 0 1rem 0`           |
+|       `--field-background-color`       |             `white`              |
 |        `--submit-button-width`         |             `15rem`              |
 |        `--submit-button-height`        |              `2rem`              |
 |      `--submit-button-background`      |      `var(--color-primary)`      |

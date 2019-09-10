@@ -9,6 +9,8 @@
   --field-border-right: none;
   --field-border-bottom: 1px solid var(--color-primary);
   --field-border-left: none;
+  --field-margin: 0 0 1rem 0;
+  --field-background-color: white;
   --submit-button-width: 15rem;
   --submit-button-height: 2rem;
   --submit-button-background: var(--color-primary);
@@ -70,11 +72,11 @@
   transition: 0.4s;
 }
 
-input:checked+.slider {
+input:checked + .slider {
   background-color: #2196f3;
 }
 
-input:checked+.slider:before {
+input:checked + .slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
@@ -114,6 +116,8 @@ input:checked+.slider:before {
   border-right: var(--field-border-right);
   border-bottom: var(--field-border-bottom);
   border-left: var(--field-border-left);
+  margin: var(--field-margin);
+  background-color: var(--field-background-color);
   outline: none;
 }
 
