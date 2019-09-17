@@ -26,6 +26,20 @@
 | `uploadingFiles`  |             | `CustomEvent<any>` |
 
 
+## Methods
+
+### `handleSubmit() => Promise<void>`
+
+Function to handle submit event when user finishes inserting values. It uploads resources if needed and emits an event with
+  an array containing all form values on it, prepared to send to phemium.
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
+
 ----------------------------------------------
 
 *Built with [StencilJS](https://stenciljs.com/)*

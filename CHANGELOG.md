@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.0.5] - 2019-09-17
+
+### Changed
+
+- Change the way how the form handles submit. It now has a public method to manage sumbit and emit an event with field values.
+
 ## [1.0.4] - 2019-09-17
 
 ### Changed
