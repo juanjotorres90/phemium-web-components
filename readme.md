@@ -65,6 +65,12 @@ Vue.config.ignoredElements = [/test-\w*/];
 phemiumLoader(window);
 ```
 
+## Methods
+
+|     Property     |                         Description                          |
+| :--------------: | :----------------------------------------------------------: |
+| `handleSubmit()` | `Component will emit formCompleted event with field values.` |
+
 ## Properties
 
 |  Property  | Default |                                  Description                                   |

@@ -12,6 +12,10 @@ export namespace Components {
   interface PhemiumCard {
     'card': any;
     'config': { apiEndpoint: string; token: string; userId: number; hideSubmitButton: boolean; selectionStyle: string; showStaticText: boolean; soloText: boolean; submitButtonText: string; maxFileSize: any; formStyle: string; inputChecked: boolean; };
+    /**
+    * Function to handle submit event when user finishes inserting values. It uploads resources if needed and emits an event with   an array containing all form values on it, prepared to send to phemium.
+    */
+    'handleSubmit': () => Promise<void>;
     'language': string;
   }
 }

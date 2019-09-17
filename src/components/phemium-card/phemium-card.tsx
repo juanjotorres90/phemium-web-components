@@ -1,4 +1,4 @@
-import { Component, Prop, Event, EventEmitter, State, h } from '@stencil/core';
+import { Component, Prop, Event, EventEmitter, State, h, Method } from '@stencil/core';
 
 @Component({
   tag: 'phemium-card',
@@ -84,8 +84,8 @@ export class PhemiumCard {
    *  an array containing all form values on it, prepared to send to phemium.
    * @param event property event emited by input type submit.
    */
-  async handleSubmit(event) {
-    event.preventDefault();
+  @Method()
+  async handleSubmit() {
     if (this.hasFiles == true) {
       this.uploadingFiles.emit();
       const resource = await this.uploadResource(this.file.item);
@@ -259,7 +259,7 @@ export class PhemiumCard {
   render() {
     if (this.card) {
       return [
-        <form id='phemiumForm' class={`w-full ${this.config.formStyle}`} onSubmit={event => this.handleSubmit(event)}>
+        <form id='phemiumForm' class={`w-full ${this.config.formStyle}`}>
           {this.card.fields.map(field => {
             const fieldName = this.getFieldName(field, 'es');
             if (field.library_field.type == this.cardInputTypes.TEXT) {
@@ -380,9 +380,6 @@ export class PhemiumCard {
               return <div class='static-text-container' innerHTML={this.getStaticText(field)} />;
             }
           })}
-          {!this.config.hideSubmitButton ? (
-            <input class='submit-button outline-none cursor-pointer' type='submit' value={this.config.submitButtonText} />
-          ) : null}
         </form>
       ];
     } else {
