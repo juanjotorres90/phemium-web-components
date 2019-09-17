@@ -7,9 +7,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [1.0.4] - 2019-09-17
 
-### Added
+### Changed
 
 - Fix minor style issues.
+
+### Added
+
+- Add padding css variable to submit button.
 
 ## [1.0.3] - 2019-09-10
 
