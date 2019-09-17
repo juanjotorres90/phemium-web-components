@@ -150,16 +150,12 @@ export class PhemiumCard {
     if (this.config.selectionStyle !== 'toggle' && this.config.selectionStyle !== 'checkbox') {
       formData.append(
         'arguments',
-        `[{"enduser_id":${this.config.userId}},[{"library_field_id":${libraryFieldId},"options":[${checked}]}],"es",${
-          this.card.id
-        },false]`
+        `[{"enduser_id":${this.config.userId}},[{"library_field_id":${libraryFieldId},"options":[${checked}]}],"es",${this.card.id},false]`
       );
     } else {
       formData.append(
         'arguments',
-        `[{"enduser_id":${this.config.userId}},[{"library_field_id":${libraryFieldId},"options":[${checked}]}],"es",${
-          this.card.id
-        },false]`
+        `[{"enduser_id":${this.config.userId}},[{"library_field_id":${libraryFieldId},"options":[${checked}]}],"es",${this.card.id},false]`
       );
     }
 
@@ -337,7 +333,7 @@ export class PhemiumCard {
               } else if (this.config.selectionStyle === 'checkbox') {
                 return (
                   <div class='card-field flex justify-between items-center'>
-                    <div class='flex'>
+                    <div class='items-center flex'>
                       <input
                         type='checkbox'
                         class=''
@@ -360,7 +356,7 @@ export class PhemiumCard {
                 if (!this.config.soloText) {
                   return (
                     <div class='w-full flex justify-center items-center mt-4 p-8'>
-                      <div class='flex justify-between w-1/2'>
+                      <div class='flex justify-between w-full'>
                         <button
                           id='refuseButton'
                           class='refuse-button'

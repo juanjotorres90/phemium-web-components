@@ -1,6 +1,6 @@
 {
   "name": "@phemium-costaisa/phemium-web-components",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "Phemium Web Components Library build with Stencil One",
   "main": "dist/index.js",
   "module": "dist/index.mjs",

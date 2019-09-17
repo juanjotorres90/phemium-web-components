@@ -13,6 +13,7 @@
   --field-background-color: white;
   --submit-button-width: 15rem;
   --submit-button-height: 2rem;
+  --submit-button-padding: 0;
   --submit-button-background: var(--color-primary);
   --submit-button-text-color: white;
   --submit-button-radius: 7px;
@@ -72,11 +73,11 @@
   transition: 0.4s;
 }
 
-input:checked + .slider {
+input:checked+.slider {
   background-color: #2196f3;
 }
 
-input:checked + .slider:before {
+input:checked+.slider:before {
   -webkit-transform: translateX(26px);
   -ms-transform: translateX(26px);
   transform: translateX(26px);
@@ -142,6 +143,7 @@ select.card-field {
 .submit-button {
   width: var(--submit-button-width);
   height: var(--submit-button-height);
+  padding: var(--submit-button-padding);
   background: var(--submit-button-background);
   color: var(--submit-button-text-color);
   border-radius: var(--submit-button-radius);

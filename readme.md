@@ -107,6 +107,7 @@ phemiumLoader(window);
 |       `--field-background-color`       |             `white`              |
 |        `--submit-button-width`         |             `15rem`              |
 |        `--submit-button-height`        |              `2rem`              |
+|       `--submit-button-padding`        |               `0`                |
 |      `--submit-button-background`      |      `var(--color-primary)`      |
 |      `--submit-button-text-color`      |             `white`              |
 |        `--submit-button-radius`        |              `7px`               |
