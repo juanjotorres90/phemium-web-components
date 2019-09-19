@@ -139,7 +139,8 @@ export class PhemiumCard {
    * @param event Property event emited by input.
    * @param libraryFieldId Id of the modified field in the phemium form.
    */
-  async handleCheckboxChange(checked, libraryFieldId) {
+  async handleCheckboxChange(event, checked, libraryFieldId) {
+    event.preventDefault();
     const entity = 'cards';
     const method = 'update_field_values';
     let formData = new FormData();
@@ -324,7 +325,7 @@ export class PhemiumCard {
                       <input
                         id={field.library_field.identification}
                         type='checkbox'
-                        onChange={(event: any) => this.handleCheckboxChange(event.target.checked, field.library_field_id)}
+                        onChange={(event: any) => this.handleCheckboxChange(event, event.target.checked, field.library_field_id)}
                       />
                       <span class='slider round' />
                     </label>
@@ -338,7 +339,7 @@ export class PhemiumCard {
                         type='checkbox'
                         class=''
                         checked={this.config.inputChecked}
-                        onChange={(event: any) => this.handleCheckboxChange(event.target.checked, field.library_field_id)}
+                        onChange={(event: any) => this.handleCheckboxChange(event, event.target.checked, field.library_field_id)}
                       />
                       <span class='ml-2'>Condiciones legales</span>
                     </div>
@@ -360,14 +361,14 @@ export class PhemiumCard {
                         <button
                           id='refuseButton'
                           class='refuse-button'
-                          onClick={() => this.handleCheckboxChange(false, field.library_field_id)}
+                          onClick={event => this.handleCheckboxChange(event, false, field.library_field_id)}
                         >
                           Descartar
                         </button>
                         <button
                           id='acceptButton'
                           class='accept-button'
-                          onClick={() => this.handleCheckboxChange(true, field.library_field_id)}
+                          onClick={event => this.handleCheckboxChange(event, true, field.library_field_id)}
                         >
                           Aceptar
                         </button>
