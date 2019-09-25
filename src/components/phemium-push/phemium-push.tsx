@@ -7,7 +7,7 @@ import { Component, Prop, h, State, Method, Listen } from '@stencil/core';
   styleUrl: 'phemium-push.css',
   shadow: true
 })
-export class phemiumPush {
+export class PhemiumPush {
   API_ENDPOINT = 'https://api-dev.phemium.com/v1/api/';
   pushInstance: any;
   pushPayload: any;
