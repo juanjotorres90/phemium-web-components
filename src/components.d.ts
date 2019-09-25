@@ -22,7 +22,6 @@ export namespace Components {
     'active': boolean;
     'appId': string;
     'firebaseConfig': any;
-    'initialize': () => Promise<void>;
     'phemiumConfig': any;
     'showPushInstances': () => Promise<void>;
     'token': string;

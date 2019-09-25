@@ -36,6 +36,7 @@ This is how your firebase configuration object should look. Change values to wha
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property         | Attribute         | Description | Type      | Default     |
@@ -46,20 +47,20 @@ This is how your firebase configuration object should look. Change values to wha
 | `phemiumConfig`  | `phemium-config`  |             | `any`     | `undefined` |
 | `token`          | `token`           |             | `string`  | `undefined` |
 
+
 ## Methods
-
-### `initialize() => Promise<void>`
-
-#### Returns
-
-Type: `Promise<void>`
 
 ### `showPushInstances() => Promise<void>`
 
+
+
 #### Returns
 
 Type: `Promise<void>`
 
----
 
-_Built with [StencilJS](https://stenciljs.com/)_
+
+
+----------------------------------------------
+
+*Built with [StencilJS](https://stenciljs.com/)*
