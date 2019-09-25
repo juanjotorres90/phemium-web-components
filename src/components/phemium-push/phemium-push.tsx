@@ -282,7 +282,6 @@ export class PhemiumPush {
         }}
       >
         <span class='w-2/3 text-white break-words'>{this.message}</span>
-        <span class='w-2/3 text-white break-words font-semibold mt-2'>Medicina general y de familia</span>
         <svg class='w-10 absolute right-0 pr-4' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
           <path
             fill='white'
