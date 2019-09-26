@@ -1,7 +1,8 @@
 import { newSpecPage } from '@stencil/core/testing';
 import { PhemiumPush } from './phemium-push';
+import * as firebase from '../../utils/firebase';
 
-it('should render my component', async () => {
+it('should render phemium-push', async () => {
   const page = await newSpecPage({
     components: [PhemiumPush],
     html: `<phemium-push></phemium-push>`
@@ -18,4 +19,31 @@ it('should render my component', async () => {
       </mock:shadow-root>
     </phemium-push>
   `);
+});
+
+it('should be hidden', () => {
+  const push = new PhemiumPush();
+  expect(push.active).toBe(false);
+});
+
+it('should initialize firebase', async () => {
+  firebase.app.initializeApp = jest.fn();
+  const page = await newSpecPage({
+    components: [PhemiumPush],
+    html: `<div></div>`
+  });
+  const component = page.doc.createElement('phemium-push');
+  (component as any).firebaseConfig = {
+    apiKey: 'AIzaSyAVCs15Up66CZCqyOG9XcWf0albXleFFgU',
+    authDomain: 'phemium-enduser-mobile.firebaseapp.com',
+    databaseURL: 'https://phemium-enduser-mobile.firebaseio.com',
+    projectId: 'phemium-enduser-mobile',
+    storageBucket: 'phemium-enduser-mobile.appspot.com',
+    messagingSenderId: '949680591977',
+    appId: '1:949680591977:web:83d05094f2cf1cec'
+  };
+  page.root.appendChild(component);
+  await page.waitForChanges();
+  expect((component as any).firebaseConfig).toBeTruthy();
+  expect(firebase.app.initializeApp).toHaveBeenCalledWith(page.rootInstance.firebaseConfig);
 });

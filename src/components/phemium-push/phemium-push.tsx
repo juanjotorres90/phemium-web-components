@@ -1,7 +1,6 @@
 declare const window;
 
 import { Component, Prop, h, State, Method, Listen } from '@stencil/core';
-// import { format } from '../../utils/utils';
 @Component({
   tag: 'phemium-push',
   styleUrl: 'phemium-push.css',
@@ -24,8 +23,7 @@ export class PhemiumPush {
   @Prop() firebaseConfig: any;
 
   @Listen('deviceready', { target: 'document' })
-  protected async devicereadyHandler(event) {
-    window.console.log('Received the "deviceready" event: ', event);
+  protected async devicereadyHandler() {
     await this.initializePhonegapPush();
   }
 
@@ -37,14 +35,10 @@ export class PhemiumPush {
     this.draggable(this.notificationBox);
   }
 
-  componentDidUpdate() {
-    window.console.log('phemiumConfig: ', this.phemiumConfig);
-  }
+  componentDidUpdate() {}
 
   @Method()
-  async showPushInstances() {
-    window.console.log(this.pushInstance);
-  }
+  async showPushInstances() {}
 
   async askForPermissioToReceiveNotifications() {
     const firebase = await import('../../utils/firebase');
@@ -61,7 +55,6 @@ export class PhemiumPush {
       // - the user clicks on an app notification created by a service worker
       //   `messaging.setBackgroundMessageHandler` handler.
       messaging.onMessage(payload => {
-        window.console.log('payload web: ', payload);
         if (!payload.data && !payload.data.consultation_id) {
           return;
         }
@@ -78,7 +71,7 @@ export class PhemiumPush {
         this.initializePhemiumPush(token);
       });
     } catch (error) {
-      console.error(error);
+      // console.log(error);
     }
   }
 
@@ -107,8 +100,6 @@ export class PhemiumPush {
       // data.sound,
       // data.image,
       // data.additionalData
-      window.console.log('PUSH MESSAGE PAYLOAD: ', data);
-      window.console.log('PUSH MESSAGE DATA: ', data.message);
 
       if (data.additionalData.foreground) {
         this.consultationId = data.additionalData.consultation_id;
@@ -122,13 +113,11 @@ export class PhemiumPush {
     });
 
     this.pushInstance.on('error', e => {
-      window.console.log('ERROR PUSH: ', e);
       // e.message
     });
 
     this.pushInstance.on('registration', async data => {
       // data.registrationId
-      window.console.log('PUSH REGISTRATION DATA', data);
       await this.initializePhemiumPush(data.registrationId);
     });
   }
@@ -171,7 +160,6 @@ export class PhemiumPush {
           body: formDataPush
         });
         response = await res.json();
-        window.console.log(response);
         resolve(registrationToken);
       } catch (error) {
         response = console.error('Error:', error);
@@ -203,7 +191,6 @@ export class PhemiumPush {
         voip_notifications: 'false',
         wkwebview_type: 'ionic'
       };
-      window.console.log(test_settings);
       const plugin = new window.plugins.PhemiumEnduserPlugin();
       plugin.open_consultation(test_settings);
     } else {
