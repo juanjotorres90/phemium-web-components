@@ -28,7 +28,7 @@ export class PhemiumPush {
   }
 
   async componentWillLoad() {
-    !window.cordova ? this.askForPermissioToReceiveNotifications() : null;
+    // !window.cordova ? this.askForPermissioToReceiveNotifications() : null;
   }
 
   async componentDidLoad() {
@@ -37,6 +37,10 @@ export class PhemiumPush {
 
   componentDidUpdate() {}
 
+  @Method()
+  async initialize() {
+    !window.cordova ? this.askForPermissioToReceiveNotifications() : await this.initializePhonegapPush();
+  }
   @Method()
   async showPushInstances() {}
 
@@ -112,7 +116,7 @@ export class PhemiumPush {
       }
     });
 
-    this.pushInstance.on('error', e => {
+    this.pushInstance.on('error', () => {
       // e.message
     });
 
@@ -159,6 +163,8 @@ export class PhemiumPush {
           method: 'POST',
           body: formDataPush
         });
+        console.log(response);
+
         response = await res.json();
         resolve(registrationToken);
       } catch (error) {

@@ -50,6 +50,16 @@ This is how your firebase configuration object should look. Change values to wha
 
 ## Methods
 
+### `initialize() => Promise<void>`
+
+
+
+#### Returns
+
+Type: `Promise<void>`
+
+
+
 ### `showPushInstances() => Promise<void>`
 
 
