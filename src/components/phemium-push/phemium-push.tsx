@@ -233,7 +233,6 @@ export class PhemiumPush {
 
       const reset = () => {
         el.style.transition = 'all 0.5s';
-        // el.style.transition = 'left 0.5s, opacity 0.5s';
         const percentageMoved = (el.offsetLeft / window.innerWidth) * 100;
 
         if (percentageMoved > 50) {
