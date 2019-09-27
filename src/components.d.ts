@@ -20,9 +20,8 @@ export namespace Components {
   }
   interface PhemiumPush {
     'active': boolean;
-    'initialize': (phemiumConfig: any, firebaseConfig: any, appID: string) => Promise<void>;
+    'initialize': (phemiumConfig: any, firebaseConfig: any, appID?: string) => Promise<void>;
     'showPushInstances': () => Promise<void>;
-    'token': string;
   }
 }
 
@@ -60,7 +59,6 @@ declare namespace LocalJSX {
   }
   interface PhemiumPush extends JSXBase.HTMLAttributes<HTMLPhemiumPushElement> {
     'active'?: boolean;
-    'token'?: string;
   }
 
   interface IntrinsicElements {
