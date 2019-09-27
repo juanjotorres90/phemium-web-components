@@ -10,7 +10,7 @@
 
 First of all you need to copy all content from node_modules/@phemium-costaisa/phemium-web-components/dist into to somewhere else inside your project (e.g. your-app/phemium-web-components).
 
-Once you have all the compiled files inside your project you will need to add the following line inside index.html:
+Once you have all the compiled files inside your project you will need to add the following line inside HEAD tag of your index.html:
 
 ```
 <script src='phemium-web-components/pdf-web-components.js'></script>

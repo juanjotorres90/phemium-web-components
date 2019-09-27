@@ -1,50 +1,43 @@
 declare const window;
 
-import { Component, Prop, h, State, Method, Listen } from '@stencil/core';
+import { Component, Prop, h, State, Method } from '@stencil/core';
 @Component({
   tag: 'phemium-push',
   styleUrl: 'phemium-push.css',
   shadow: true
 })
 export class PhemiumPush {
+  @Prop({ reflectToAttr: true }) active = false;
+
+  @State() notificationBox: any;
+  @State() message: string;
+
   API_ENDPOINT = 'https://api-dev.phemium.com/v1/api/';
   pushInstance: any;
   pushPayload: any;
   pushVoip: any;
   consultationId: number;
-
-  @State() notificationBox: any;
-  @State() message: string;
-
-  @Prop({ reflectToAttr: true }) active = false;
-  @Prop() appId: string;
-  @Prop() token: string;
-  @Prop() phemiumConfig: any;
-  @Prop() firebaseConfig: any;
-
-  @Listen('deviceready', { target: 'document' })
-  protected async devicereadyHandler() {
-    await this.initializePhonegapPush();
-  }
-
-  async componentWillLoad() {
-    // !window.cordova ? this.askForPermissioToReceiveNotifications() : null;
-  }
+  appID: string;
+  phemiumConfig: any;
+  firebaseConfig: any;
 
   async componentDidLoad() {
     this.draggable(this.notificationBox);
   }
 
-  componentDidUpdate() {}
-
   @Method()
-  async initialize() {
-    !window.cordova ? this.askForPermissioToReceiveNotifications() : await this.initializePhonegapPush();
+  async initialize(phemiumConfig: any, firebaseConfig: any, appID?: string) {
+    this.phemiumConfig = phemiumConfig;
+    this.firebaseConfig = firebaseConfig;
+    this.appID = appID;
+    !window.cordova ? this.askForPermissionToReceiveNotifications() : await this.initializePhonegapPush();
   }
   @Method()
-  async showPushInstances() {}
+  async showPushInstances() {
+    console.log(this.pushInstance);
+  }
 
-  async askForPermissioToReceiveNotifications() {
+  async askForPermissionToReceiveNotifications() {
     const firebase = await import('../../utils/firebase');
     // Initialize Firebase
     firebase.app.initializeApp(this.firebaseConfig);
@@ -52,6 +45,7 @@ export class PhemiumPush {
       const messaging = firebase.app.messaging();
       await messaging.requestPermission();
       const token = await messaging.getToken();
+      console.log('Your registration token is: ', token);
       await this.initializePhemiumPush(token);
 
       // Handle incoming messages. Called when:
@@ -80,7 +74,7 @@ export class PhemiumPush {
   }
 
   async initializePhonegapPush() {
-    if (!this.token) {
+    if (!this.phemiumConfig.token) {
       return;
     }
 
@@ -122,6 +116,7 @@ export class PhemiumPush {
 
     this.pushInstance.on('registration', async data => {
       // data.registrationId
+      console.log('Your registration token is: ', data.registrationId);
       await this.initializePhemiumPush(data.registrationId);
     });
   }
@@ -140,7 +135,7 @@ export class PhemiumPush {
           'arguments',
           `[{
             "platform":"${window.device.platform.toLowerCase()}", 
-            "app_id":"${this.appId}",
+            "app_id":"${this.appID}",
             "registration_token":"${registrationToken}",
             "device_uuid":"${window.device.uuid}",
             "ios_environment": "sandbox"
@@ -157,18 +152,16 @@ export class PhemiumPush {
         );
       }
 
-      let response: void | Promise<any>;
       try {
         const res = await fetch(this.API_ENDPOINT, {
           method: 'POST',
           body: formDataPush
         });
-        console.log(response);
-
-        response = await res.json();
+        await res.json();
+        console.log('Phemium push notifications initialized correctly');
         resolve(registrationToken);
       } catch (error) {
-        response = console.error('Error:', error);
+        console.error('Error initalizing Phemium push notifications. Error: ', error);
         reject(error);
       }
     });
