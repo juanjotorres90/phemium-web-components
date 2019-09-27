@@ -1,5 +1,16 @@
 # Phemium Card Web Component
 
+<!-- TOC -->
+
+- [Installation](#installation)
+  - [AngularJS (1.x)](#angularjs-1x)
+  - [Angular 2+](#angular-2)
+  - [React](#react)
+  - [Vue](#vue)
+- [Contribute](#contribute)
+
+<!-- /TOC -->
+
 ## Installation
 
 ```bash
@@ -8,11 +19,11 @@
 
 ### AngularJS (1.x)
 
-First of all you need to copy all content from node_modules/@phemium-costaisa/phemium-web-components/dist into to somewhere else inside your project (e.g. your-app/phemium-web-components).
+First of all you need to copy all the content from node_modules/@phemium-costaisa/phemium-web-components/dist into to somewhere else inside your project (e.g. your-app/phemium-web-components).
 
 Once you have all the compiled files inside your project you will need to add the following line inside HEAD tag of your index.html:
 
-```
+```html
 <script src='phemium-web-components/pdf-web-components.js'></script>
 ```
 

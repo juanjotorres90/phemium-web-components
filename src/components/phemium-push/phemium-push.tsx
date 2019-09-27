@@ -53,6 +53,8 @@ export class PhemiumPush {
       // - the user clicks on an app notification created by a service worker
       //   `messaging.setBackgroundMessageHandler` handler.
       messaging.onMessage(payload => {
+        console.log('Notification received: ', payload);
+
         if (!payload.data && !payload.data.consultation_id) {
           return;
         }
@@ -98,6 +100,8 @@ export class PhemiumPush {
       // data.sound,
       // data.image,
       // data.additionalData
+
+      console.log('Notification received: ', data);
 
       if (data.additionalData.foreground) {
         this.consultationId = data.additionalData.consultation_id;
@@ -145,7 +149,7 @@ export class PhemiumPush {
         formDataPush.append(
           'arguments',
           `[{
-            "platform":"browser", 
+            "platform":"browser",
             "app_id":"${this.firebaseConfig.projectId}",
             "registration_token":"${registrationToken}"
           }]`
@@ -259,7 +263,7 @@ export class PhemiumPush {
   render() {
     return [
       <div
-        ref={el => (this.notificationBox = el as HTMLInputElement)}
+        ref={el => (this.notificationBox = el as HTMLDivElement)}
         id='notificationBox'
         class='w-full h-20 absolute bg-blue-600 flex flex-col justify-center pl-4 items-start cursor-pointer'
         onClick={() => {
