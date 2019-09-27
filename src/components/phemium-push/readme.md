@@ -21,6 +21,7 @@ phemiumConfig = {
 ```
 
 This is how your firebase configuration object should look. Change values to whatever you need.
+(_firebaseConfig only needed on Android and iOS applications_)
 
 ```javascript
 firebaseConfig = {
@@ -32,6 +33,13 @@ firebaseConfig = {
   messagingSenderId: '949680591977',
   appId: '1:949680591977:web:83d05094f2cf1cec'
 };
+```
+
+This is how your app id should look. Change values to whatever you need.
+(_app id only needed on Android and iOS applications_)
+
+```javascript
+appID = 'com.phemium.enduser.testapp';
 ```
 
 Once your component has been rendered your may initialize it:
