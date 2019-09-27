@@ -139,7 +139,7 @@ export class PhemiumPush {
         formDataPush.append(
           'arguments',
           `[{
-            "platform":"${window.device.platform.toLowerCase()}", 
+            "platform":"${window.device.platform.toLowerCase()}",
             "app_id":"${this.appId}",
             "registration_token":"${registrationToken}",
             "device_uuid":"${window.device.uuid}",
@@ -150,15 +150,15 @@ export class PhemiumPush {
         formDataPush.append(
           'arguments',
           `[{
-            "platform":"browser", 
+            "platform":"browser",
             "app_id":"${this.firebaseConfig.projectId}",
             "registration_token":"${registrationToken}"
           }]`
         );
       }
 
-      let response: void | Promise<any>;
       try {
+        let response: void|Promise<any>;
         const res = await fetch(this.API_ENDPOINT, {
           method: 'POST',
           body: formDataPush
@@ -168,7 +168,7 @@ export class PhemiumPush {
         response = await res.json();
         resolve(registrationToken);
       } catch (error) {
-        response = console.error('Error:', error);
+        console.error('Error:', error);
         reject(error);
       }
     });
@@ -266,7 +266,7 @@ export class PhemiumPush {
   render() {
     return [
       <div
-        ref={el => (this.notificationBox = el as HTMLInputElement)}
+        ref={el => (this.notificationBox = el as HTMLDivElement)}
         id='notificationBox'
         class='w-full h-20 absolute bg-blue-600 flex flex-col justify-center pl-4 items-start cursor-pointer'
         onClick={() => {

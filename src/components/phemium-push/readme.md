@@ -4,14 +4,14 @@
 
 In your HTML files:
 
-```
+```html
  <phemium-push phemium-config="phemiumConfig" firebase-config="firebaseConfig" app-id="com.phemium.enduser.testapp">
  </phemium-push>
 ```
 
 This is how your phemium configuration object should look. Change values to whatever you need.
 
-```
+```javascript
   phemiumConfig = {
     customer: 'Phemium Demos Testing',
     token: '3af3e8c801a7fdb20ffba393139e3df5d94722ed',
@@ -22,7 +22,7 @@ This is how your phemium configuration object should look. Change values to what
 
 This is how your firebase configuration object should look. Change values to whatever you need.
 
-```
+```javascript
   firebaseConfig = {
     apiKey: 'AIzaSyAVCs15Up66CZCqyOG9XcWf0albXleFFgU',
     authDomain: 'phemium-enduser-mobile.firebaseapp.com',
