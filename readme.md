@@ -1,6 +1,6 @@
 # Phemium Card Web Component
 
-<!-- TOC depthFrom: 2 -->
+<!-- TOC -->
 
 - [Installation](#installation)
   - [AngularJS (1.x)](#angularjs-1x)
@@ -23,7 +23,7 @@ First of all you need to copy all the content from node_modules/@phemium-costais
 
 Once you have all the compiled files inside your project you will need to add the following line inside index.html:
 
-```
+```html
 <script src='phemium-web-components/pdf-web-components.js'></script>
 ```
 
