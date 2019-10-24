@@ -21,7 +21,7 @@ phemiumConfig = {
 ```
 
 This is how your firebase configuration object should look. Change values to whatever you need.
-(_firebaseConfig only needed on Android and iOS applications_)
+(_firebaseConfig only needed on web applications_)
 
 ```javascript
 firebaseConfig = {
@@ -42,8 +42,6 @@ This is how your app id should look. Change values to whatever you need.
 appID = 'com.phemium.enduser.testapp';
 ```
 
-Once your component has been rendered your may initialize it:
-
 ### AngularJS (1.x)
 
 First of all you need to copy all content from node_modules/@phemium-costaisa/phemium-web-components/dist into to somewhere else inside your project (e.g. your-app/phemium-web-components).
@@ -56,12 +54,16 @@ In your HTML file:
  <phemium-push id="phemiumPush"></phemium-push>
 ```
 
-In your component file:
-(_firebaseConfig and appID are only needed on Android and iOS applications_)
+Once your component has been rendered your may initialize it in your component file:
+(_firebaseConfig only needed in web and appID only needed on Android and iOS applications, NULL otherwise_)
 
 ```
   const phemiumPush = document.querySelector('#phemiumPush');
+```
 
+Whenever you have all data needed:
+
+```
   await phemiumPush.initialize(this.phemiumConfig, this.firebaseConfig, this.appID);
 ```
 
@@ -73,15 +75,18 @@ In your HTML file:
   <phemium-push #phemiumPush></phemium-push>
 ```
 
-In your component file:
-(_firebaseConfig and appID are only needed on Android and iOS applications_)
+Once your component has been rendered your may initialize it in your component file:
+(_firebaseConfig only needed in web and appID only needed on Android and iOS applications, NULL otherwise_)
 
 ```
    @ViewChild('phemiumPush') phemiumPush: any;
 
-    async ngAfterViewInit() {
+```
+
+Whenever you have all data needed:
+
+```
       await this.phemiumPush.nativeElement.initialize(this.phemiumConfig, this.firebaseConfig, this.appID);
-    }
 ```
 
 ### Angular 8
@@ -92,14 +97,17 @@ In your HTML file:
  <phemium-push #phemiumPush></phemium-push>
 ```
 
-In your component file:
-(_firebaseConfig and appID are only needed on Android and iOS applications_)
+Once your component has been rendered your may initialize it in your component file:
+(_firebaseConfig only needed in web and appID only needed on Android and iOS applications, NULL otherwise_)
 
 ```
    @ViewChild('phemiumPush', {static: false}) phemiumPush: any;
-    async ngAfterViewInit() {
+```
+
+Whenever you have all data needed:
+
+```
       await this.phemiumPush.nativeElement.initialize(this.phemiumConfig, this.firebaseConfig, this.appID);
-    }
 ```
 
 <!-- Auto Generated Below -->
