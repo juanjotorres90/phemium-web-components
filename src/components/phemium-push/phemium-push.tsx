@@ -12,7 +12,7 @@ export class PhemiumPush {
   @State() notificationBox: any;
   @State() message: string;
 
-  API_ENDPOINT = 'https://api-dev.phemium.com/v1/api/';
+  API_ENDPOINT: string;
   pushInstance: any;
   pushPayload: any;
   pushVoip: any;
@@ -28,6 +28,7 @@ export class PhemiumPush {
   @Method()
   async initialize(phemiumConfig: any, firebaseConfig: any, appID?: string) {
     this.phemiumConfig = phemiumConfig;
+    this.API_ENDPOINT = `https://api-${phemiumConfig.environment}.phemium.com/v1/api/`;
     this.firebaseConfig = firebaseConfig;
     this.appID = appID;
     !window.cordova ? this.askForPermissionToReceiveNotifications() : await this.initializePhonegapPush();
@@ -43,33 +44,35 @@ export class PhemiumPush {
     firebase.app.initializeApp(this.firebaseConfig);
     try {
       const messaging = firebase.app.messaging();
-      await messaging.requestPermission();
-      const token = await messaging.getToken();
-      console.log('Your registration token is: ', token);
-      await this.initializePhemiumPush(token);
-
-      // Handle incoming messages. Called when:
-      // - a message is received while the app has focus
-      // - the user clicks on an app notification created by a service worker
-      //   `messaging.setBackgroundMessageHandler` handler.
-      messaging.onMessage(payload => {
-        console.log('Notification received: ', payload);
-
-        if (!payload.data && !payload.data.consultation_id) {
-          return;
-        }
-        this.pushPayload = payload;
-        this.consultationId = payload.data.consultation_id;
-        if (this.pushPayload.data.type === 'call_request') {
-          this.openEnduser();
-        } else {
-          this.active = true;
-        }
-      });
-      messaging.onTokenRefresh(async () => {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
         const token = await messaging.getToken();
-        this.initializePhemiumPush(token);
-      });
+        console.log('Your registration token is: ', token);
+        await this.initializePhemiumPush(token);
+
+        // Handle incoming messages. Called when:
+        // - a message is received while the app has focus
+        // - the user clicks on an app notification created by a service worker
+        //   `messaging.setBackgroundMessageHandler` handler.
+        messaging.onMessage(payload => {
+          console.log('Notification received: ', payload);
+
+          if (!payload.data && !payload.data.consultation_id) {
+            return;
+          }
+          this.pushPayload = payload;
+          this.consultationId = payload.data.consultation_id;
+          if (this.pushPayload.data.type === 'call_request') {
+            this.openEnduser();
+          } else {
+            this.active = true;
+          }
+        });
+        messaging.onTokenRefresh(async () => {
+          const token = await messaging.getToken();
+          this.initializePhemiumPush(token);
+        });
+      }
     } catch (error) {
       // console.log(error);
     }

@@ -112,26 +112,37 @@ Whenever you have all data needed:
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property | Attribute | Description | Type      | Default |
 | -------- | --------- | ----------- | --------- | ------- |
 | `active` | `active`  |             | `boolean` | `false` |
 
+
 ## Methods
 
 ### `initialize(phemiumConfig: any, firebaseConfig: any, appID?: string) => Promise<void>`
 
+
+
 #### Returns
 
 Type: `Promise<void>`
+
+
 
 ### `showPushInstances() => Promise<void>`
 
+
+
 #### Returns
 
 Type: `Promise<void>`
 
----
 
-_Built with [StencilJS](https://stenciljs.com/)_
+
+
+----------------------------------------------
+
+*Built with [StencilJS](https://stenciljs.com/)*
