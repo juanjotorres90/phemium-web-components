@@ -1,6 +1,6 @@
 declare const window;
 
-import { Component, Prop, h, State, Method } from '@stencil/core';
+import { Component, Prop, h, State, Method, Event, EventEmitter } from '@stencil/core';
 @Component({
   tag: 'phemium-push',
   styleUrl: 'phemium-push.css',
@@ -8,15 +8,19 @@ import { Component, Prop, h, State, Method } from '@stencil/core';
 })
 export class PhemiumPush {
   @Prop({ reflectToAttr: true }) active = false;
+  @Prop() showNotification = false;
+  @Prop() customHandler = false;
 
   @State() notificationBox: any;
+  @State() title: string;
   @State() message: string;
+
+  @Event() onNotification: EventEmitter<any>;
 
   API_ENDPOINT: string;
   pushInstance: any;
   pushPayload: any;
   pushVoip: any;
-  consultationId: number;
   appID: string;
   phemiumConfig: any;
   firebaseConfig: any;
@@ -26,7 +30,7 @@ export class PhemiumPush {
   }
 
   @Method()
-  async initialize(phemiumConfig: any, firebaseConfig: any, appID?: string) {
+  async initialize(phemiumConfig: any, firebaseConfig: any, appID: string) {
     this.phemiumConfig = phemiumConfig;
     this.API_ENDPOINT = `https://api-${phemiumConfig.environment}.phemium.com/v1/api/`;
     this.firebaseConfig = firebaseConfig;
@@ -50,31 +54,46 @@ export class PhemiumPush {
         console.log('Your registration token is: ', token);
         await this.initializePhemiumPush(token);
 
+        // Handle background received notifications.
+        navigator.serviceWorker.addEventListener('message', event => {
+          console.log('Entra a navigator event listener');
+          if (!event.data.fromBackground) {
+            return;
+          }
+          this.receivedNotificationData(event.data);
+        });
+
         // Handle incoming messages. Called when:
         // - a message is received while the app has focus
         // - the user clicks on an app notification created by a service worker
         //   `messaging.setBackgroundMessageHandler` handler.
         messaging.onMessage(payload => {
-          console.log('Notification received: ', payload);
-
-          if (!payload.data && !payload.data.consultation_id) {
-            return;
-          }
-          this.pushPayload = payload;
-          this.consultationId = payload.data.consultation_id;
-          if (this.pushPayload.data.type === 'call_request') {
-            this.openEnduser();
-          } else {
-            this.active = true;
-          }
+          this.receivedNotificationData(payload);
         });
+
         messaging.onTokenRefresh(async () => {
           const token = await messaging.getToken();
           this.initializePhemiumPush(token);
         });
       }
     } catch (error) {
-      // console.log(error);
+      console.log(error);
+    }
+  }
+
+  receivedNotificationData(payload) {
+    this.pushPayload = payload;
+    this.pushPayload.data = { ...this.pushPayload.data, params: JSON.parse(this.pushPayload.data.params) };
+    console.log('New push notification received: ', this.pushPayload);
+    if (!this.pushPayload.data.params.consultation_id) {
+      return;
+    }
+    if (this.pushPayload.data.type === 'CONSULTATION_CALL_REQUEST' || !this.showNotification) {
+      this.onNotificationHandler();
+    } else {
+      this.title = this.pushPayload.data.title;
+      this.message = this.pushPayload.data.body;
+      this.active = true;
     }
   }
 
@@ -107,22 +126,19 @@ export class PhemiumPush {
       console.log('Notification received: ', data);
 
       if (data.additionalData.foreground) {
-        this.consultationId = data.additionalData.consultation_id;
         this.message = data.message;
         this.active = true;
       } else {
-        this.consultationId = data.additionalData.consultation_id;
         this.pushPayload = data;
         this.openEnduser();
       }
     });
 
-    this.pushInstance.on('error', () => {
-      // e.message
+    this.pushInstance.on('error', e => {
+      console.log(e.message);
     });
 
     this.pushInstance.on('registration', async data => {
-      // data.registrationId
       console.log('Your registration token is: ', data.registrationId);
       await this.initializePhemiumPush(data.registrationId);
     });
@@ -174,14 +190,21 @@ export class PhemiumPush {
     });
   }
 
-  openEnduser() {
-    console.log('PUSH DATA', this.pushPayload);
+  onNotificationHandler() {
+    if (this.customHandler) {
+      this.onNotification.emit(this.pushPayload);
+    } else {
+      this.openEnduser();
+    }
+    this.active = false;
+  }
 
+  openEnduser() {
     if (window.cordova) {
       var test_settings = {
-        action: this.pushPayload.data.type === 'call_request' ? 'call_request' : null,
+        action: this.pushPayload.data.type === 'CONSULTATION_CALL_REQUEST' ? 'call_request' : null,
         appointment_external_id: null,
-        consultation_id: this.consultationId,
+        consultation_id: this.pushPayload.data.params.consultation_id,
         customer_id: null,
         enduser_token: this.phemiumConfig.token,
         environment: 'dev',
@@ -209,14 +232,20 @@ export class PhemiumPush {
         portal: this.phemiumConfig.portal,
         token: this.phemiumConfig.token,
         enduser_id: this.phemiumConfig.enduser_id,
-        consultation_id: this.consultationId,
+        consultation_id: this.pushPayload.data.params.consultation_id,
         open_urls_target: 'fsw',
         hide_header: 'false',
-        action: this.pushPayload.data.type === 'call_request' ? 'call_request' : null
+        action: this.pushPayload.data.type === 'CONSULTATION_CALL_REQUEST' ? 'call_request' : null
       };
       console.log('embedder config: ', phemiumConfig);
 
-      const webAppElement = document.querySelector('#phemium-webapp');
+      // const webAppElement = document.querySelector('#phemium-webapp');
+      const webAppElement = document.createElement('div');
+      webAppElement.id = '#phemium-webapp';
+      webAppElement.style.width = '100vw';
+      webAppElement.style.height = '100vh';
+      webAppElement.style.position = 'absolute';
+      document.body.appendChild(webAppElement);
       window.phemiumEEL.init(phemiumConfig);
       window.phemiumEEL.consultationLoaded(async () => {
         console.log('loaded');
@@ -224,7 +253,6 @@ export class PhemiumPush {
 
       window.phemiumEEL.set_iframe(webAppElement);
     }
-    this.active = false;
   }
 
   draggable(el) {
@@ -270,9 +298,10 @@ export class PhemiumPush {
         id='notificationBox'
         class='w-full h-20 absolute bg-blue-600 flex flex-col justify-center pl-4 items-start cursor-pointer'
         onClick={() => {
-          this.openEnduser();
+          this.onNotificationHandler();
         }}
       >
+        <span class='w-2/3 text-white break-words'>{this.title}</span>
         <span class='w-2/3 text-white break-words'>{this.message}</span>
         <svg class='w-10 absolute right-0 pr-4' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
           <path

@@ -1,5 +1,9 @@
 # phemium-push
 
+## Before using phemium-push web component Firebase must be configurated
+
+<!-- Link to firebase configuration document -->
+
 ## Usage
 
 In your HTML files:
@@ -110,19 +114,64 @@ Whenever you have all data needed:
       await this.phemiumPush.nativeElement.initialize(this.phemiumConfig, this.firebaseConfig, this.appID);
 ```
 
+## Notification callback
+
+By default phemium-push will use a callback on each phemium notification received. This callback will display a toast. Whenever this toast is clicked it will open the corresponding consultation if its not opened yet.
+
+Instead of this default beheviour you can emmit an event from phemium-push component to handle push notifications callback on your application. This event will emmit all data received from Phemium API. To use your own custom handler and emmit the data you must set property "customHandler" to true and listen to notificationHandler event:
+
+### ANGULAR
+
+HTML file:
+
+```
+<phemium-push #phemiumPush custom-handler=true (onNotification)="notificationHandler(\$event)"></phemium-push>
+```
+
+TS file:
+
+```
+notificationHandler(event){
+  console.log(event);
+}
+```
+
+### Other
+
+HTML file:
+
+```
+<phemium-push id='phemiumPush' custom-handler=true></phemium-push>
+```
+
+Vanilla JS:
+
+```
+document.querySelector('#phemium-push').addEventListener(onNotification, (event)=>{console.log(event)})
+```
+
 <!-- Auto Generated Below -->
 
 
 ## Properties
 
-| Property | Attribute | Description | Type      | Default |
-| -------- | --------- | ----------- | --------- | ------- |
-| `active` | `active`  |             | `boolean` | `false` |
+| Property           | Attribute           | Description | Type      | Default |
+| ------------------ | ------------------- | ----------- | --------- | ------- |
+| `active`           | `active`            |             | `boolean` | `false` |
+| `customHandler`    | `custom-handler`    |             | `boolean` | `false` |
+| `showNotification` | `show-notification` |             | `boolean` | `false` |
+
+
+## Events
+
+| Event            | Description | Type               |
+| ---------------- | ----------- | ------------------ |
+| `onNotification` |             | `CustomEvent<any>` |
 
 
 ## Methods
 
-### `initialize(phemiumConfig: any, firebaseConfig: any, appID?: string) => Promise<void>`
+### `initialize(phemiumConfig: any, firebaseConfig: any, appID: string) => Promise<void>`
 
 
 
