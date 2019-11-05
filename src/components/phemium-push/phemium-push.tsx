@@ -31,6 +31,8 @@ export class PhemiumPush {
 
   @Method()
   async initialize(phemiumConfig: any, firebaseConfig: any, appID: string) {
+    console.log('entra initialize amb: ', phemiumConfig, appID);
+
     this.phemiumConfig = phemiumConfig;
     this.API_ENDPOINT = `https://api-${phemiumConfig.environment}.phemium.com/v1/api/`;
     this.firebaseConfig = firebaseConfig;
@@ -82,17 +84,29 @@ export class PhemiumPush {
   }
 
   receivedNotificationData(payload) {
-    this.pushPayload = payload;
-    this.pushPayload.data = { ...this.pushPayload.data, params: JSON.parse(this.pushPayload.data.params) };
-    console.log('New push notification received: ', this.pushPayload);
-    if (!this.pushPayload.data.params.consultation_id) {
+    console.log(payload);
+
+    if (!payload.data && !payload.additionalData) {
       return;
+    }
+    this.pushPayload = {
+      data: payload.data || payload.additionalData,
+      message: payload.message || payload.data.body,
+      title: payload.title || payload.data.title
+    };
+    console.log(this.pushPayload);
+
+    if (!this.pushPayload.data.params || !this.pushPayload.data.params.consultation_id) {
+      return;
+    }
+    if (!window.cordova) {
+      this.pushPayload.data = { ...this.pushPayload.data, params: JSON.parse(this.pushPayload.data.params) };
     }
     if (this.pushPayload.data.type === 'CONSULTATION_CALL_REQUEST' || !this.showNotification) {
       this.onNotificationHandler();
     } else {
-      this.title = this.pushPayload.data.title;
-      this.message = this.pushPayload.data.body;
+      this.title = this.pushPayload.title;
+      this.message = this.pushPayload.message;
       this.active = true;
     }
   }
@@ -124,14 +138,7 @@ export class PhemiumPush {
       // data.additionalData
 
       console.log('Notification received: ', data);
-
-      if (data.additionalData.foreground) {
-        this.message = data.message;
-        this.active = true;
-      } else {
-        this.pushPayload = data;
-        this.openEnduser();
-      }
+      this.receivedNotificationData(data);
     });
 
     this.pushInstance.on('error', e => {
