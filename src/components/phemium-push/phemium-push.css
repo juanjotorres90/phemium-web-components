@@ -1,5 +1,5 @@
-phemium-push {
-    /* Component styles go here */
+:host {
+    --background-color: #418cd8;
 }
 
 :host div {
@@ -11,4 +11,8 @@ phemium-push {
     transition: opacity 0.5s;
     opacity: 1;
     z-index: 99;
+}
+
+.notification--color {
+    background-color: var(--background-color);
 }

@@ -125,7 +125,7 @@ Instead of this default beheviour you can emmit an event from phemium-push compo
 HTML file:
 
 ```
-<phemium-push #phemiumPush custom-handler=true (onNotification)="notificationHandler(\$event)"></phemium-push>
+<phemium-push #phemiumPush custom-handler=true (onNotification)="notificationHandler($event)"></phemium-push>
 ```
 
 TS file:
@@ -150,6 +150,58 @@ Vanilla JS:
 document.querySelector('#phemium-push').addEventListener(onNotification, (event)=>{console.log(event)})
 ```
 
+<!--FIREBASE SERVICE WORKER EXAMPLE  -->
+
+```
+// Give the service worker access to Firebase Messaging.
+// Note that you can only use Firebase Messaging here, other Firebase libraries
+// are not available in the service worker.
+importScripts('https://www.gstatic.com/firebasejs/6.3.4/firebase-app.js');
+importScripts('https://www.gstatic.com/firebasejs/6.3.4/firebase-messaging.js');
+
+// Initialize the Firebase app in the service worker by passing in the
+// messagingSenderId.
+firebase.initializeApp({
+  messagingSenderId: 'YOUR-SENDER-ID'
+});
+
+// Retrieve an instance of Firebase Messaging so that it can handle background
+// messages.
+const messaging = firebase.messaging();
+
+messaging.setBackgroundMessageHandler(function(payload) {
+  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+  // Customize notification here
+  const notificationTitle = payload.data.title;
+  const notificationOptions = {
+    body: payload.data.body,
+    data: payload.data
+  };
+
+  // Condition to send all consultations from Phemium received in background to phemium-push web component
+  if (payload.data.params && payload.data.params.includes('consultation_id')) {
+    const promiseChain = clients
+      .matchAll({
+        type: 'window',
+        includeUncontrolled: true
+      })
+      .then(windowClients => {
+        for (let i = 0; i < windowClients.length; i++) {
+          const windowClient = windowClients[i];
+          payload.fromBackground = true;
+          windowClient.postMessage(payload);
+        }
+      })
+      .then(() => {
+        return self.registration.showNotification(notificationTitle, notificationOptions);
+      });
+    return promiseChain;
+  } else {
+    return self.registration.showNotification(notificationTitle, notificationOptions);
+  }
+});
+```
+
 <!-- Auto Generated Below -->
 
 
@@ -172,16 +224,6 @@ document.querySelector('#phemium-push').addEventListener(onNotification, (event)
 ## Methods
 
 ### `initialize(phemiumConfig: any, firebaseConfig: any, appID: string) => Promise<void>`
-
-
-
-#### Returns
-
-Type: `Promise<void>`
-
-
-
-### `showPushInstances() => Promise<void>`
 
 
 

@@ -31,17 +31,11 @@ export class PhemiumPush {
 
   @Method()
   async initialize(phemiumConfig: any, firebaseConfig: any, appID: string) {
-    console.log('entra initialize amb: ', phemiumConfig, appID);
-
     this.phemiumConfig = phemiumConfig;
     this.API_ENDPOINT = `https://api-${phemiumConfig.environment}.phemium.com/v1/api/`;
     this.firebaseConfig = firebaseConfig;
     this.appID = appID;
-    !window.cordova ? this.askForPermissionToReceiveNotifications() : await this.initializePhonegapPush();
-  }
-  @Method()
-  async showPushInstances() {
-    console.log(this.pushInstance);
+    !window.cordova ? await this.askForPermissionToReceiveNotifications() : await this.initializePhonegapPush();
   }
 
   async askForPermissionToReceiveNotifications() {
@@ -58,7 +52,6 @@ export class PhemiumPush {
 
         // Handle background received notifications.
         navigator.serviceWorker.addEventListener('message', event => {
-          console.log('Entra a navigator event listener');
           if (!event.data.fromBackground) {
             return;
           }
@@ -80,34 +73,6 @@ export class PhemiumPush {
       }
     } catch (error) {
       console.log(error);
-    }
-  }
-
-  receivedNotificationData(payload) {
-    console.log(payload);
-
-    if (!payload.data && !payload.additionalData) {
-      return;
-    }
-    this.pushPayload = {
-      data: payload.data || payload.additionalData,
-      message: payload.message || payload.data.body,
-      title: payload.title || payload.data.title
-    };
-    console.log(this.pushPayload);
-
-    if (!this.pushPayload.data.params || !this.pushPayload.data.params.consultation_id) {
-      return;
-    }
-    if (!window.cordova) {
-      this.pushPayload.data = { ...this.pushPayload.data, params: JSON.parse(this.pushPayload.data.params) };
-    }
-    if (this.pushPayload.data.type === 'CONSULTATION_CALL_REQUEST' || !this.showNotification) {
-      this.onNotificationHandler();
-    } else {
-      this.title = this.pushPayload.title;
-      this.message = this.pushPayload.message;
-      this.active = true;
     }
   }
 
@@ -197,8 +162,33 @@ export class PhemiumPush {
     });
   }
 
+  receivedNotificationData(payload) {
+    if (!payload.data && !payload.additionalData) {
+      return;
+    }
+    this.pushPayload = {
+      data: payload.data || payload.additionalData,
+      message: payload.message || payload.data.body,
+      title: payload.title || payload.data.title
+    };
+
+    if (this.pushPayload.data.params && typeof this.pushPayload.data.params === 'string') {
+      this.pushPayload.data.params = JSON.parse(this.pushPayload.data.params);
+    }
+    if (!this.pushPayload.data.params || !this.pushPayload.data.params.consultation_id) {
+      return;
+    }
+    if (this.pushPayload.data.type === 'CONSULTATION_CALL_REQUEST' || !this.showNotification) {
+      this.onNotificationHandler();
+    } else {
+      this.title = this.pushPayload.title;
+      this.message = this.pushPayload.message;
+      this.active = true;
+    }
+  }
+
   onNotificationHandler() {
-    if (this.customHandler) {
+    if (this.customHandler || !window.cordova) {
       this.onNotification.emit(this.pushPayload);
     } else {
       this.openEnduser();
@@ -303,7 +293,7 @@ export class PhemiumPush {
       <div
         ref={el => (this.notificationBox = el as HTMLDivElement)}
         id='notificationBox'
-        class='w-full h-20 absolute bg-blue-600 flex flex-col justify-center pl-4 items-start cursor-pointer'
+        class='w-full h-20 absolute notification--color flex flex-col justify-center pl-4 items-start cursor-pointer'
         onClick={() => {
           this.onNotificationHandler();
         }}

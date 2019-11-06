@@ -23,7 +23,6 @@ export namespace Components {
     'customHandler': boolean;
     'initialize': (phemiumConfig: any, firebaseConfig: any, appID: string) => Promise<void>;
     'showNotification': boolean;
-    'showPushInstances': () => Promise<void>;
   }
 }
 
