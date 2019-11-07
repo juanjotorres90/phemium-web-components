@@ -166,18 +166,24 @@ export class PhemiumPush {
     if (!payload.data && !payload.additionalData) {
       return;
     }
+
+    // Transform data to have the same structure on all platforms
     this.pushPayload = {
       data: payload.data || payload.additionalData,
       message: payload.message || payload.data.body,
-      title: payload.title || payload.data.title
+      title: payload.title || payload.data.title || this.phemiumConfig.portal
     };
-
+    // Parse params in case of string to check later if consultation id is present
     if (this.pushPayload.data.params && typeof this.pushPayload.data.params === 'string') {
       this.pushPayload.data.params = JSON.parse(this.pushPayload.data.params);
     }
+
+    // Check if it is a phemium push notification by locating consultation_id in params
     if (!this.pushPayload.data.params || !this.pushPayload.data.params.consultation_id) {
       return;
     }
+
+    // Trigger handler or show notification depending on settings or push type
     if (this.pushPayload.data.type === 'CONSULTATION_CALL_REQUEST' || !this.showNotification) {
       this.onNotificationHandler();
     } else {
