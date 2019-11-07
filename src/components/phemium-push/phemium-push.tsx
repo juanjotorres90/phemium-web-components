@@ -32,7 +32,7 @@ export class PhemiumPush {
   @Method()
   async initialize(phemiumConfig: any, firebaseConfig: any, appID: string) {
     this.phemiumConfig = phemiumConfig;
-    this.API_ENDPOINT = `https://api-${phemiumConfig.environment}.phemium.com/v1/api/`;
+    this.API_ENDPOINT = `https://api-${this.phemiumConfig.environment}.phemium.com/v1/api/`;
     this.firebaseConfig = firebaseConfig;
     this.appID = appID;
     !window.cordova ? await this.askForPermissionToReceiveNotifications() : await this.initializePhonegapPush();
@@ -210,7 +210,7 @@ export class PhemiumPush {
         consultation_id: this.pushPayload.data.params.consultation_id,
         customer_id: null,
         enduser_token: this.phemiumConfig.token,
-        environment: 'dev',
+        environment: this.phemiumConfig.environment,
         extraUseCallkit: 'false',
         face2face: 'false',
         lng: null,
