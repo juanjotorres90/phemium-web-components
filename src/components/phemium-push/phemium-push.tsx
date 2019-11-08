@@ -171,8 +171,9 @@ export class PhemiumPush {
     this.pushPayload = {
       data: payload.data || payload.additionalData,
       message: payload.message || payload.data.body,
-      title: payload.title || payload.data.title || this.phemiumConfig.portal
+      title: payload.data ? payload.data.title : payload.title || this.phemiumConfig.portal
     };
+
     // Parse params in case of string to check later if consultation id is present
     if (this.pushPayload.data.params && typeof this.pushPayload.data.params === 'string') {
       this.pushPayload.data.params = JSON.parse(this.pushPayload.data.params);
