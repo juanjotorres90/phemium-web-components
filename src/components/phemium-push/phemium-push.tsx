@@ -105,7 +105,6 @@ export class PhemiumPush {
     });
 
     this.pushInstance.on("notification", data => {
-      // data.message,
       // data.sound,
       // data.image,
       // data.additionalData
