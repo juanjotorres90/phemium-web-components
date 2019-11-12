@@ -105,7 +105,6 @@ export class PhemiumPush {
     });
 
     this.pushInstance.on("notification", data => {
-      // data.image,
       // data.additionalData
 
       console.log("Notification received: ", data);
