@@ -1,9 +1,17 @@
 declare const window;
 
-import { Component, Prop, h, State, Method, Event, EventEmitter } from '@stencil/core';
+import {
+  Component,
+  Prop,
+  h,
+  State,
+  Method,
+  Event,
+  EventEmitter
+} from "@stencil/core";
 @Component({
-  tag: 'phemium-push',
-  styleUrl: 'phemium-push.css',
+  tag: "phemium-push",
+  styleUrl: "phemium-push.css",
   shadow: true
 })
 export class PhemiumPush {
@@ -35,23 +43,25 @@ export class PhemiumPush {
     this.API_ENDPOINT = `https://api-${this.phemiumConfig.environment}.phemium.com/v1/api/`;
     this.firebaseConfig = firebaseConfig;
     this.appID = appID;
-    !window.cordova ? await this.askForPermissionToReceiveNotifications() : await this.initializePhonegapPush();
+    !window.cordova
+      ? await this.askForPermissionToReceiveNotifications()
+      : await this.initializePhonegapPush();
   }
 
   async askForPermissionToReceiveNotifications() {
-    const firebase = await import('../../utils/firebase');
+    const firebase = await import("../../utils/firebase");
     // Initialize Firebase
     firebase.app.initializeApp(this.firebaseConfig);
     try {
       const messaging = firebase.app.messaging();
       const permission = await Notification.requestPermission();
-      if (permission === 'granted') {
+      if (permission === "granted") {
         const token = await messaging.getToken();
-        console.log('Your registration token is: ', token);
+        console.log("Your registration token is: ", token);
         await this.initializePhemiumPush(token);
 
         // Handle background received notifications.
-        navigator.serviceWorker.addEventListener('message', event => {
+        navigator.serviceWorker.addEventListener("message", event => {
           if (!event.data.fromBackground) {
             return;
           }
@@ -83,18 +93,18 @@ export class PhemiumPush {
 
     this.pushInstance = window.PushNotification.init({
       android: {
-        alert: 'true',
-        badge: 'true',
-        sound: 'true'
+        alert: "true",
+        badge: "true",
+        sound: "true"
       },
       ios: {
-        alert: 'true',
-        badge: 'true',
-        sound: 'true'
+        alert: "true",
+        badge: "true",
+        sound: "true"
       }
     });
 
-    this.pushInstance.on('notification', data => {
+    this.pushInstance.on("notification", data => {
       // data.message,
       // data.title,
       // data.count,
@@ -102,32 +112,32 @@ export class PhemiumPush {
       // data.image,
       // data.additionalData
 
-      console.log('Notification received: ', data);
+      console.log("Notification received: ", data);
       this.receivedNotificationData(data);
     });
 
-    this.pushInstance.on('error', e => {
+    this.pushInstance.on("error", e => {
       console.log(e.message);
     });
 
-    this.pushInstance.on('registration', async data => {
-      console.log('Your registration token is: ', data.registrationId);
+    this.pushInstance.on("registration", async data => {
+      console.log("Your registration token is: ", data.registrationId);
       await this.initializePhemiumPush(data.registrationId);
     });
   }
 
   initializePhemiumPush(registrationToken: any) {
     return new Promise(async (resolve, reject) => {
-      const entity = 'endusers';
-      const method = 'update_push_notications_token_info';
+      const entity = "endusers";
+      const method = "update_push_notications_token_info";
       const token = this.phemiumConfig.token;
       let formDataPush = new FormData();
-      formDataPush.append('token', token);
-      formDataPush.append('entity', entity);
-      formDataPush.append('method', method);
+      formDataPush.append("token", token);
+      formDataPush.append("entity", entity);
+      formDataPush.append("method", method);
       if (window.cordova) {
         formDataPush.append(
-          'arguments',
+          "arguments",
           `[{
             "platform":"${window.device.platform.toLowerCase()}", 
             "app_id":"${this.appID}",
@@ -138,7 +148,7 @@ export class PhemiumPush {
         );
       } else {
         formDataPush.append(
-          'arguments',
+          "arguments",
           `[{
             "platform":"browser",
             "app_id":"${this.firebaseConfig.projectId}",
@@ -149,14 +159,17 @@ export class PhemiumPush {
 
       try {
         const res = await fetch(this.API_ENDPOINT, {
-          method: 'POST',
+          method: "POST",
           body: formDataPush
         });
         await res.json();
-        console.log('Phemium push notifications initialized correctly');
+        console.log("Phemium push notifications initialized correctly");
         resolve(registrationToken);
       } catch (error) {
-        console.error('Error initalizing Phemium push notifications. Error: ', error);
+        console.error(
+          "Error initalizing Phemium push notifications. Error: ",
+          error
+        );
         reject(error);
       }
     });
@@ -171,21 +184,32 @@ export class PhemiumPush {
     this.pushPayload = {
       data: payload.data || payload.additionalData,
       message: payload.message || payload.data.body,
-      title: payload.data ? payload.data.title : payload.title || this.phemiumConfig.portal
+      title: payload.data
+        ? payload.data.title
+        : payload.title || this.phemiumConfig.portal
     };
 
     // Parse params in case of string to check later if consultation id is present
-    if (this.pushPayload.data.params && typeof this.pushPayload.data.params === 'string') {
+    if (
+      this.pushPayload.data.params &&
+      typeof this.pushPayload.data.params === "string"
+    ) {
       this.pushPayload.data.params = JSON.parse(this.pushPayload.data.params);
     }
 
     // Check if it is a phemium push notification by locating consultation_id in params
-    if (!this.pushPayload.data.params || !this.pushPayload.data.params.consultation_id) {
+    if (
+      !this.pushPayload.data.params ||
+      !this.pushPayload.data.params.phemium
+    ) {
       return;
     }
 
     // Trigger handler or show notification depending on settings or push type
-    if (this.pushPayload.data.type === 'CONSULTATION_CALL_REQUEST' || !this.showNotification) {
+    if (
+      this.pushPayload.data.type === "CONSULTATION_CALL_REQUEST" ||
+      !this.showNotification
+    ) {
       this.onNotificationHandler();
     } else {
       this.title = this.pushPayload.title;
@@ -206,23 +230,26 @@ export class PhemiumPush {
   openEnduser() {
     if (window.cordova) {
       var test_settings = {
-        action: this.pushPayload.data.type === 'CONSULTATION_CALL_REQUEST' ? 'call_request' : null,
+        action:
+          this.pushPayload.data.type === "CONSULTATION_CALL_REQUEST"
+            ? "call_request"
+            : null,
         appointment_external_id: null,
         consultation_id: this.pushPayload.data.params.consultation_id,
         customer_id: null,
         enduser_token: this.phemiumConfig.token,
         environment: this.phemiumConfig.environment,
-        extraUseCallkit: 'false',
-        face2face: 'false',
+        extraUseCallkit: "false",
+        face2face: "false",
         lng: null,
-        origin_url: '',
+        origin_url: "",
         portal_name: this.phemiumConfig.portal,
-        service_id: '',
+        service_id: "",
         show_consultations_by_status: null,
-        theme: 'csi',
-        tls: '0',
-        voip_notifications: 'false',
-        wkwebview_type: 'ionic'
+        theme: "csi",
+        tls: "0",
+        voip_notifications: "false",
+        wkwebview_type: "ionic"
       };
       const plugin = new window.plugins.PhemiumEnduserPlugin();
       plugin.open_consultation(test_settings);
@@ -237,22 +264,25 @@ export class PhemiumPush {
         token: this.phemiumConfig.token,
         enduser_id: this.phemiumConfig.enduser_id,
         consultation_id: this.pushPayload.data.params.consultation_id,
-        open_urls_target: 'fsw',
-        hide_header: 'false',
-        action: this.pushPayload.data.type === 'CONSULTATION_CALL_REQUEST' ? 'call_request' : null
+        open_urls_target: "fsw",
+        hide_header: "false",
+        action:
+          this.pushPayload.data.type === "CONSULTATION_CALL_REQUEST"
+            ? "call_request"
+            : null
       };
-      console.log('embedder config: ', phemiumConfig);
+      console.log("embedder config: ", phemiumConfig);
 
       // const webAppElement = document.querySelector('#phemium-webapp');
-      const webAppElement = document.createElement('div');
-      webAppElement.id = '#phemium-webapp';
-      webAppElement.style.width = '100vw';
-      webAppElement.style.height = '100vh';
-      webAppElement.style.position = 'absolute';
+      const webAppElement = document.createElement("div");
+      webAppElement.id = "#phemium-webapp";
+      webAppElement.style.width = "100vw";
+      webAppElement.style.height = "100vh";
+      webAppElement.style.position = "absolute";
       document.body.appendChild(webAppElement);
       window.phemiumEEL.init(phemiumConfig);
       window.phemiumEEL.consultationLoaded(async () => {
-        console.log('loaded');
+        console.log("loaded");
       });
 
       window.phemiumEEL.set_iframe(webAppElement);
@@ -260,38 +290,39 @@ export class PhemiumPush {
   }
 
   draggable(el) {
-    el.addEventListener('touchstart', e => {
-      const offsetX = e.touches[0].clientX - parseInt(window.getComputedStyle(el).left);
+    el.addEventListener("touchstart", e => {
+      const offsetX =
+        e.touches[0].clientX - parseInt(window.getComputedStyle(el).left);
       const mouseMoveHandler = e => {
         if (e.touches[0].clientX - offsetX < 0) {
           return;
         }
-        el.style.left = e.touches[0].clientX - offsetX + 'px';
+        el.style.left = e.touches[0].clientX - offsetX + "px";
       };
 
       const reset = () => {
-        el.style.transition = 'all 0.5s';
+        el.style.transition = "all 0.5s";
         const percentageMoved = (el.offsetLeft / window.innerWidth) * 100;
 
         if (percentageMoved > 50) {
-          el.style.left = '100%';
+          el.style.left = "100%";
           setTimeout(() => {
-            el.style.left = '0px';
+            el.style.left = "0px";
           }, 500);
           this.active = false;
         } else {
-          el.style.left = '0px';
+          el.style.left = "0px";
         }
 
-        window.removeEventListener('touchmove', mouseMoveHandler);
-        window.removeEventListener('touchend', reset);
+        window.removeEventListener("touchmove", mouseMoveHandler);
+        window.removeEventListener("touchend", reset);
         setTimeout(() => {
-          el.style.transition = 'left 0s, opacity 0.5s';
+          el.style.transition = "left 0s, opacity 0.5s";
         }, 500);
       };
 
-      window.addEventListener('touchmove', mouseMoveHandler);
-      window.addEventListener('touchend', reset);
+      window.addEventListener("touchmove", mouseMoveHandler);
+      window.addEventListener("touchend", reset);
     });
   }
 
@@ -299,18 +330,22 @@ export class PhemiumPush {
     return [
       <div
         ref={el => (this.notificationBox = el as HTMLDivElement)}
-        id='notificationBox'
-        class='w-full h-20 absolute notification--color flex flex-col justify-center pl-4 items-start cursor-pointer'
+        id="notificationBox"
+        class="w-full h-20 absolute notification--color flex flex-col justify-center pl-4 items-start cursor-pointer"
         onClick={() => {
           this.onNotificationHandler();
         }}
       >
-        <span class='w-2/3 text-white break-words'>{this.title}</span>
-        <span class='w-2/3 text-white break-words'>{this.message}</span>
-        <svg class='w-10 absolute right-0 pr-4' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'>
+        <span class="w-2/3 text-white break-words">{this.title}</span>
+        <span class="w-2/3 text-white break-words">{this.message}</span>
+        <svg
+          class="w-10 absolute right-0 pr-4"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 512 512"
+        >
           <path
-            fill='white'
-            d='M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z'
+            fill="white"
+            d="M294.1 256L167 129c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.3 34 0L345 239c9.1 9.1 9.3 23.7.7 33.1L201.1 417c-4.7 4.7-10.9 7-17 7s-12.3-2.3-17-7c-9.4-9.4-9.4-24.6 0-33.9l127-127.1z"
           />
         </svg>
       </div>
