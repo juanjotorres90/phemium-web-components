@@ -249,7 +249,6 @@ export class PhemiumPush {
       plugin.open_consultation(test_settings);
     } else {
       // window.phemiumEEL.set_callback('redirect', () => {
-      // });
       const phemiumConfig = {
         phemium_environment_url: this.API_ENDPOINT,
         customer: this.phemiumConfig.customer, //dubto
