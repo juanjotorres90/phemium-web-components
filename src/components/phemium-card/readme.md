@@ -51,7 +51,7 @@ This is how your configuration object should look. Change values to whatever you
 |  `selectionStyle`  | `string`  |       `checkbox | toggle`       |   `checkbox`    |    `Style to display selection inputs.`     |
 |  `showStaticText`  | `boolean` |         `true | false`          |     `true`      |   `Show static text associated to field.`   |
 |     `soloText`     | `boolean` |         `true | false`          |     `false`     |    `Show only the static text on field.`    |
-| `submitButtonText` | `boolean` |         `true | false`          |   `Continuar`   |        `Text for the submit button.`        |
+| `submitButtonText` | `string`  |                                 |   `Continuar`   |        `Text for the submit button.`        |
 |   `maxFileSize`    | `number`  |                                 |      null       |        `Maximum file size allowed.`         |
 |    `formStyle`     | `string`  | `single-column | double-column` | `single-column` |            `Style of the form.`             |
 |   `inputChecked`   | `boolean` |         `true | false`          |     `false`     |       `Initial input checkbox value.`       |
