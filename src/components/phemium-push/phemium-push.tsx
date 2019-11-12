@@ -105,7 +105,6 @@ export class PhemiumPush {
     });
 
     this.pushInstance.on("notification", data => {
-      // data.additionalData
 
       console.log("Notification received: ", data);
       this.receivedNotificationData(data);
