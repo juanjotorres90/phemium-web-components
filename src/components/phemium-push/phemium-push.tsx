@@ -267,7 +267,6 @@ export class PhemiumPush {
       };
       console.log("embedder config: ", phemiumConfig);
 
-      // const webAppElement = document.querySelector('#phemium-webapp');
       const webAppElement = document.createElement("div");
       webAppElement.id = "#phemium-webapp";
       webAppElement.style.width = "100vw";
