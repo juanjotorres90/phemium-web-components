@@ -18,6 +18,12 @@ export namespace Components {
     'handleSubmit': () => Promise<void>;
     'language': string;
   }
+  interface PhemiumPush {
+    'active': boolean;
+    'customHandler': boolean;
+    'initialize': (phemiumConfig: any, firebaseConfig: any, appID: string) => Promise<void>;
+    'showNotification': boolean;
+  }
 }
 
 declare global {
@@ -28,8 +34,15 @@ declare global {
     prototype: HTMLPhemiumCardElement;
     new (): HTMLPhemiumCardElement;
   };
+
+  interface HTMLPhemiumPushElement extends Components.PhemiumPush, HTMLStencilElement {}
+  var HTMLPhemiumPushElement: {
+    prototype: HTMLPhemiumPushElement;
+    new (): HTMLPhemiumPushElement;
+  };
   interface HTMLElementTagNameMap {
     'phemium-card': HTMLPhemiumCardElement;
+    'phemium-push': HTMLPhemiumPushElement;
   }
 }
 
@@ -45,9 +58,16 @@ declare namespace LocalJSX {
     'onShowInformation'?: (event: CustomEvent<any>) => void;
     'onUploadingFiles'?: (event: CustomEvent<any>) => void;
   }
+  interface PhemiumPush extends JSXBase.HTMLAttributes<HTMLPhemiumPushElement> {
+    'active'?: boolean;
+    'customHandler'?: boolean;
+    'onOnNotification'?: (event: CustomEvent<any>) => void;
+    'showNotification'?: boolean;
+  }
 
   interface IntrinsicElements {
     'phemium-card': PhemiumCard;
+    'phemium-push': PhemiumPush;
   }
 }
 
