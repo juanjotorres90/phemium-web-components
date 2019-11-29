@@ -105,7 +105,6 @@ export class PhemiumPush {
     });
 
     this.pushInstance.on("notification", data => {
-
       console.log("Notification received: ", data);
       this.receivedNotificationData(data);
     });
@@ -228,22 +227,10 @@ export class PhemiumPush {
           this.pushPayload.data.type === "CONSULTATION_CALL_REQUEST"
             ? "call_request"
             : null,
-        appointment_external_id: null,
         consultation_id: this.pushPayload.data.params.consultation_id,
-        customer_id: null,
         enduser_token: this.phemiumConfig.token,
         environment: this.phemiumConfig.environment,
-        extraUseCallkit: "false",
-        face2face: "false",
-        lng: null,
-        origin_url: "",
-        portal_name: this.phemiumConfig.portal,
-        service_id: "",
-        show_consultations_by_status: null,
-        theme: "csi",
-        tls: "0",
-        voip_notifications: "false",
-        wkwebview_type: "ionic"
+        portal_name: this.phemiumConfig.portal
       };
       const plugin = new window.plugins.PhemiumEnduserPlugin();
       plugin.open_consultation(test_settings);
