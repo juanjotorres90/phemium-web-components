@@ -5,6 +5,46 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [1.1.1] - 2019-11-29
+
+### Changed
+
+- Change settings passed to phemium enduser mobile to open consultation on app.
+
+## [1.1.0] - 2019-11-20
+
+### Added
+
+- Add phemium-push web component.
+
+## [1.0.6] - 2019-09-19
+
+### Fixed
+
+- Add prevent default on some buttons to avoid errors.
+
+## [1.0.5] - 2019-09-17
+
+### Changed
+
+- Change the way how the form handles submit. It now has a public method to manage sumbit and emit an event with field values.
+
+## [1.0.4] - 2019-09-17
+
+### Changed
+
+- Fix minor style issues.
+
+### Added
+
+- Add padding css variable to submit button.
+
+## [1.0.3] - 2019-09-10
+
+### Added
+
+- Variable css to style margin and background color from fields.
+
 ## [1.0.1] - 2019-07-26
 
 ### Changed

@@ -7,6 +7,16 @@
 
     <script type="module" src="/build/phemium-web-components.esm.js"></script>
     <script nomodule src="/build/phemium-web-components.js"></script>
+    <script type="text/javascript">
+      //Hide splashscreen and start testApp
+      document.addEventListener('deviceready', function() {
+        document.querySelector('phemium-push').config = {
+          customer: 'Phemium Demos Testing',
+          token: '0df552e09bbc88aa7909a91d9557d7a08a31ff33',
+          enduser_id: 2
+        };
+      });
+    </script>
   </head>
   <body style="margin: 0"></body>
 </html>

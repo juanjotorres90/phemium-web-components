@@ -1,4 +1,4 @@
-import { Component, Prop, Event, EventEmitter, State, h } from '@stencil/core';
+import { Component, Prop, Event, EventEmitter, State, h, Method } from '@stencil/core';
 
 @Component({
   tag: 'phemium-card',
@@ -84,8 +84,8 @@ export class PhemiumCard {
    *  an array containing all form values on it, prepared to send to phemium.
    * @param event property event emited by input type submit.
    */
-  async handleSubmit(event) {
-    event.preventDefault();
+  @Method()
+  async handleSubmit() {
     if (this.hasFiles == true) {
       this.uploadingFiles.emit();
       const resource = await this.uploadResource(this.file.item);
@@ -139,7 +139,8 @@ export class PhemiumCard {
    * @param event Property event emited by input.
    * @param libraryFieldId Id of the modified field in the phemium form.
    */
-  async handleCheckboxChange(checked, libraryFieldId) {
+  async handleCheckboxChange(event, checked, libraryFieldId) {
+    event.preventDefault();
     const entity = 'cards';
     const method = 'update_field_values';
     let formData = new FormData();
@@ -150,16 +151,12 @@ export class PhemiumCard {
     if (this.config.selectionStyle !== 'toggle' && this.config.selectionStyle !== 'checkbox') {
       formData.append(
         'arguments',
-        `[{"enduser_id":${this.config.userId}},[{"library_field_id":${libraryFieldId},"options":[${checked}]}],"es",${
-          this.card.id
-        },false]`
+        `[{"enduser_id":${this.config.userId}},[{"library_field_id":${libraryFieldId},"options":[${checked}]}],"es",${this.card.id},false]`
       );
     } else {
       formData.append(
         'arguments',
-        `[{"enduser_id":${this.config.userId}},[{"library_field_id":${libraryFieldId},"options":[${checked}]}],"es",${
-          this.card.id
-        },false]`
+        `[{"enduser_id":${this.config.userId}},[{"library_field_id":${libraryFieldId},"options":[${checked}]}],"es",${this.card.id},false]`
       );
     }
 
@@ -263,7 +260,7 @@ export class PhemiumCard {
   render() {
     if (this.card) {
       return [
-        <form id='phemiumForm' class={`w-full ${this.config.formStyle}`} onSubmit={event => this.handleSubmit(event)}>
+        <form id='phemiumForm' class={`w-full ${this.config.formStyle}`}>
           {this.card.fields.map(field => {
             const fieldName = this.getFieldName(field, 'es');
             if (field.library_field.type == this.cardInputTypes.TEXT) {
@@ -328,7 +325,7 @@ export class PhemiumCard {
                       <input
                         id={field.library_field.identification}
                         type='checkbox'
-                        onChange={(event: any) => this.handleCheckboxChange(event.target.checked, field.library_field_id)}
+                        onChange={(event: any) => this.handleCheckboxChange(event, event.target.checked, field.library_field_id)}
                       />
                       <span class='slider round' />
                     </label>
@@ -337,12 +334,12 @@ export class PhemiumCard {
               } else if (this.config.selectionStyle === 'checkbox') {
                 return (
                   <div class='card-field flex justify-between items-center'>
-                    <div class='flex'>
+                    <div class='items-center flex'>
                       <input
                         type='checkbox'
                         class=''
                         checked={this.config.inputChecked}
-                        onChange={(event: any) => this.handleCheckboxChange(event.target.checked, field.library_field_id)}
+                        onChange={(event: any) => this.handleCheckboxChange(event, event.target.checked, field.library_field_id)}
                       />
                       <span class='ml-2'>Condiciones legales</span>
                     </div>
@@ -360,18 +357,18 @@ export class PhemiumCard {
                 if (!this.config.soloText) {
                   return (
                     <div class='w-full flex justify-center items-center mt-4 p-8'>
-                      <div class='flex justify-between w-1/2'>
+                      <div class='flex justify-between w-full'>
                         <button
                           id='refuseButton'
                           class='refuse-button'
-                          onClick={() => this.handleCheckboxChange(false, field.library_field_id)}
+                          onClick={event => this.handleCheckboxChange(event, false, field.library_field_id)}
                         >
                           Descartar
                         </button>
                         <button
                           id='acceptButton'
                           class='accept-button'
-                          onClick={() => this.handleCheckboxChange(true, field.library_field_id)}
+                          onClick={event => this.handleCheckboxChange(event, true, field.library_field_id)}
                         >
                           Aceptar
                         </button>
@@ -384,9 +381,6 @@ export class PhemiumCard {
               return <div class='static-text-container' innerHTML={this.getStaticText(field)} />;
             }
           })}
-          {!this.config.hideSubmitButton ? (
-            <input class='submit-button outline-none cursor-pointer' type='submit' value={this.config.submitButtonText} />
-          ) : null}
         </form>
       ];
     } else {

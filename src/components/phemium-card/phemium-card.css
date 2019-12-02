@@ -9,8 +9,11 @@
   --field-border-right: none;
   --field-border-bottom: 1px solid var(--color-primary);
   --field-border-left: none;
+  --field-margin: 0 0 1rem 0;
+  --field-background-color: white;
   --submit-button-width: 15rem;
   --submit-button-height: 2rem;
+  --submit-button-padding: 0;
   --submit-button-background: var(--color-primary);
   --submit-button-text-color: white;
   --submit-button-radius: 7px;
@@ -114,6 +117,8 @@ input:checked+.slider:before {
   border-right: var(--field-border-right);
   border-bottom: var(--field-border-bottom);
   border-left: var(--field-border-left);
+  margin: var(--field-margin);
+  background-color: var(--field-background-color);
   outline: none;
 }
 
@@ -138,6 +143,7 @@ select.card-field {
 .submit-button {
   width: var(--submit-button-width);
   height: var(--submit-button-height);
+  padding: var(--submit-button-padding);
   background: var(--submit-button-background);
   color: var(--submit-button-text-color);
   border-radius: var(--submit-button-radius);
