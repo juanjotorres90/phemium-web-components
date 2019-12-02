@@ -17,10 +17,10 @@ This is how your phemium configuration object should look. Change values to what
 
 ```javascript
 phemiumConfig = {
-  customer: 'Phemium Demos Testing',
-  token: '3af3e8c801a7fdb20ffba393139e3df5d94722ed',
+  customer: "Phemium Demos Testing",
+  token: "3af3e8c801a7fdb20ffba393139e3df5d94722ed",
   enduser_id: 1,
-  portal: 'Standard'
+  portal: "Standard"
 };
 ```
 
@@ -29,13 +29,13 @@ This is how your firebase configuration object should look. Change values to wha
 
 ```javascript
 firebaseConfig = {
-  apiKey: 'AIzaSyAVCs15Up66CZCqyOG9XcWf0albXleFFgU',
-  authDomain: 'phemium-enduser-mobile.firebaseapp.com',
-  databaseURL: 'https://phemium-enduser-mobile.firebaseio.com',
-  projectId: 'phemium-enduser-mobile',
-  storageBucket: 'phemium-enduser-mobile.appspot.com',
-  messagingSenderId: '949680591977',
-  appId: '1:949680591977:web:83d05094f2cf1cec'
+  apiKey: "AIzaSyAVCs15Up66CZCqyOG9XcWf0albXleFFgU",
+  authDomain: "phemium-enduser-mobile.firebaseapp.com",
+  databaseURL: "https://phemium-enduser-mobile.firebaseio.com",
+  projectId: "phemium-enduser-mobile",
+  storageBucket: "phemium-enduser-mobile.appspot.com",
+  messagingSenderId: "949680591977",
+  appId: "1:949680591977:web:83d05094f2cf1cec"
 };
 ```
 
@@ -43,7 +43,7 @@ This is how your app id should look. Change values to whatever you need.
 (_app id only needed on Android and iOS applications_)
 
 ```javascript
-appID = 'com.phemium.enduser.testapp';
+appID = "com.phemium.enduser.testapp";
 ```
 
 ### AngularJS (1.x)
@@ -179,7 +179,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
   };
 
   // Condition to send all consultations from Phemium received in background to phemium-push web component
-  if (payload.data.params && payload.data.params.includes('consultation_id')) {
+  if (payload.data.params && payload.data.params.includes('phemium')) {
     const promiseChain = clients
       .matchAll({
         type: 'window',
@@ -204,7 +204,6 @@ messaging.setBackgroundMessageHandler(function(payload) {
 
 <!-- Auto Generated Below -->
 
-
 ## Properties
 
 | Property           | Attribute           | Description | Type      | Default |
@@ -213,27 +212,20 @@ messaging.setBackgroundMessageHandler(function(payload) {
 | `customHandler`    | `custom-handler`    |             | `boolean` | `false` |
 | `showNotification` | `show-notification` |             | `boolean` | `false` |
 
-
 ## Events
 
 | Event            | Description | Type               |
 | ---------------- | ----------- | ------------------ |
 | `onNotification` |             | `CustomEvent<any>` |
 
-
 ## Methods
 
 ### `initialize(phemiumConfig: any, firebaseConfig: any, appID: string) => Promise<void>`
-
-
 
 #### Returns
 
 Type: `Promise<void>`
 
+---
 
-
-
-----------------------------------------------
-
-*Built with [StencilJS](https://stenciljs.com/)*
+_Built with [StencilJS](https://stenciljs.com/)_
