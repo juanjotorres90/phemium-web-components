@@ -18,7 +18,7 @@ test:
   stage: Code Quality
   tags:
     - shell
-  scripts:
+  script:
     - docker run phemium-web-components bash -c "npm run unit"
 
 build:
