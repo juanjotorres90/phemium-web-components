@@ -12,7 +12,7 @@ prepare:
   tags:
     - shell
   script:
-    - docker build -t phemium-web-components
+    - docker build -t phemium-web-components .
 
 test:
   stage: Code Quality
