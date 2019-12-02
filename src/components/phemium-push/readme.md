@@ -204,6 +204,7 @@ messaging.setBackgroundMessageHandler(function(payload) {
 
 <!-- Auto Generated Below -->
 
+
 ## Properties
 
 | Property           | Attribute           | Description | Type      | Default |
@@ -212,20 +213,27 @@ messaging.setBackgroundMessageHandler(function(payload) {
 | `customHandler`    | `custom-handler`    |             | `boolean` | `false` |
 | `showNotification` | `show-notification` |             | `boolean` | `false` |
 
+
 ## Events
 
 | Event            | Description | Type               |
 | ---------------- | ----------- | ------------------ |
 | `onNotification` |             | `CustomEvent<any>` |
 
+
 ## Methods
 
 ### `initialize(phemiumConfig: any, firebaseConfig: any, appID: string) => Promise<void>`
+
+
 
 #### Returns
 
 Type: `Promise<void>`
 
----
 
-_Built with [StencilJS](https://stenciljs.com/)_
+
+
+----------------------------------------------
+
+*Built with [StencilJS](https://stenciljs.com/)*
