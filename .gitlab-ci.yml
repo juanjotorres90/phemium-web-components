@@ -1,0 +1,40 @@
+variables:
+  GIT_STRATEGY: clone
+
+stages:
+  - Prepare Docker
+  - Code Quality
+  - Build Process
+  - Deploy
+
+prepare:
+  stage: Prepare Docker
+  tags:
+    - shell
+  script:
+    - docker build -t phemium-web-components .
+
+test:
+  stage: Code Quality
+  tags:
+    - shell
+  script:
+    - docker run phemium-web-components bash -c "npm run unit"
+
+build:
+  stage: Build Process
+  tags:
+    - shell
+  script:
+    - docker run phemium-web-components bash -c "npm run build"
+
+deploy:
+  stage: Deploy
+  dependencies:
+    - build
+  only:
+    - tags
+  tags:
+    - shell
+  script:
+    - docker run phemium-web-components bash -c "npm version $CI_COMMIT_TAG && npm run build && npm publish"

@@ -25,9 +25,11 @@
     "@stencil/core": "^1.1.4",
     "@stencil/postcss": "^1.0.1",
     "@types/autoprefixer": "^9.5.0",
+    "@types/puppeteer": "1.20.3",
     "autoprefixer": "^9.6.0",
     "jest": "24.8.0",
-    "jest-cli": "24.8.0"
+    "jest-cli": "24.8.0",
+    "puppeteer": "1.17.0"
   },
   "license": "MIT",
   "dependencies": {
