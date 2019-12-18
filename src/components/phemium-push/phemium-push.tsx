@@ -2,12 +2,12 @@ declare const window;
 
 import {
   Component,
-  Prop,
-  h,
-  State,
-  Method,
   Event,
-  EventEmitter
+  EventEmitter,
+  h,
+  Method,
+  Prop,
+  State
 } from "@stencil/core";
 @Component({
   tag: "phemium-push",
@@ -124,6 +124,7 @@ export class PhemiumPush {
       const entity = "endusers";
       const method = "update_push_notications_token_info";
       const token = this.phemiumConfig.token;
+      const iosEnvironment = this.phemiumConfig.iosEnvironment || "sandbox";
       let formDataPush = new FormData();
       formDataPush.append("token", token);
       formDataPush.append("entity", entity);
@@ -136,7 +137,7 @@ export class PhemiumPush {
             "app_id":"${this.appID}",
             "registration_token":"${registrationToken}",
             "device_uuid":"${window.device.uuid}",
-            "ios_environment": "sandbox"
+            "ios_environment": "${iosEnvironment}"
           }]`
         );
       } else {
