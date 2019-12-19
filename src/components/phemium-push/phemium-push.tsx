@@ -241,7 +241,6 @@ export class PhemiumPush {
         customer: this.phemiumConfig.customer, //dubto
         portal: this.phemiumConfig.portal,
         token: this.phemiumConfig.token,
-        enduser_id: this.phemiumConfig.enduser_id,
         consultation_id: this.pushPayload.data.params.consultation_id,
         open_urls_target: "fsw",
         hide_header: "false",

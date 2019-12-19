@@ -19,7 +19,6 @@ This is how your phemium configuration object should look. Change values to what
 phemiumConfig = {
   customer: "Phemium Demos Testing",
   token: "3af3e8c801a7fdb20ffba393139e3df5d94722ed",
-  enduser_id: 1,
   portal: "Standard",
   iosEnvironment: "sandbox"
 };
