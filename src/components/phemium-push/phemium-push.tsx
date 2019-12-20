@@ -202,7 +202,11 @@ export class PhemiumPush {
     // Trigger handler or show notification depending on settings or push type
     if (
       this.pushPayload.data.type === "CONSULTATION_CALL_REQUEST" ||
-      !this.showNotification
+      !this.showNotification ||
+      (this.pushPayload.data.hasOwnProperty("foreground") &&
+        !this.pushPayload.data.foreground) ||
+      (this.pushPayload.data.hasOwnProperty("coldstart") &&
+        this.pushPayload.data.coldstart)
     ) {
       this.onNotificationHandler();
     } else {
