@@ -22,18 +22,18 @@
     "test.watch": "stencil test --spec --e2e --watchAll"
   },
   "devDependencies": {
-    "@stencil/core": "1.8.6",
+    "@stencil/core": "1.1.4",
     "@stencil/postcss": "^1.0.1",
     "@types/autoprefixer": "^9.5.0",
-    "@types/jest": "24.0.25",
     "@types/puppeteer": "1.20.3",
     "autoprefixer": "^9.6.0",
-    "jest": "24.9.0",
-    "jest-cli": "24.9.0",
-    "puppeteer": "1.19.0"
+    "jest": "24.8.0",
+    "jest-cli": "24.8.0",
+    "puppeteer": "1.17.0"
   },
   "license": "MIT",
   "dependencies": {
+    "@types/jest": "^24.0.18",
     "firebase": "^6.2.4",
     "postcss-import": "^12.0.1",
     "tailwindcss": "^1.0.4"
