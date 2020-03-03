@@ -170,6 +170,7 @@ export class PhemiumPush {
   }
 
   receivedNotificationData(payload) {
+    console.log('SOY EL PAYLOAD---------------------------------->', payload);
     if (!payload.data && !payload.additionalData) {
       return;
     }
